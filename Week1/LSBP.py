@@ -1,0 +1,101 @@
+import cv2
+import argparse
+
+def box_generator(mask):
+    bb_frame_result = []
+    #binary_image = 255*mask
+    num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(binary_image)
+    for i in range(1, num_labels):  # Start from 1 to skip the background label (0)
+        x = stats[i, cv2.CC_STAT_LEFT]
+        y = stats[i, cv2.CC_STAT_TOP]
+        w = stats[i, cv2.CC_STAT_WIDTH]
+        h = stats[i, cv2.CC_STAT_HEIGHT]
+        bb = (x, y, x + w, y + h)
+        bb_frame_result.append(bb)
+    return bb_frame_result
+
+def write_xml(struct, output_path):
+    # Now create a new XML structure with frames as the first level
+    root = etree.Element("annotations")
+
+    for i_frame, frame in enumerate(struct):
+        frame_element = etree.SubElement(root, "frame", number=i_frame)
+
+        for (xtl, ytl, xbr, ybr) in frame:
+            # Create a new <box> element and copy its attributes
+            box_element = etree.SubElement(frame_element, "box", frame=str(i_frame), 
+                                          xtl=str(xtl), ytl=str(ytl),
+                                          xbr=str(xbr), ybr=str(ybr))
+
+    # Save the new XML file
+    tree = etree.ElementTree(root)
+    tree.write(output_path, pretty_print=True, xml_declaration=True, encoding="UTF-8") 
+
+def lsbp(path_video, out_video_path="./LSBP.mp4", out_xml="./LSBP_boxes.xml", output_video=False, display=False, bb_generation=False):
+    # Fine-tuned LSBP background subtractor for street traffic detection
+    print("Init script...")
+    bg_subtractor = cv2.bgsegm.createBackgroundSubtractorLSBP(
+        mc=cv2.bgsegm.LSBP_CAMERA_MOTION_COMPENSATION_NONE,
+        nSamples=50,             
+        LSBPRadius=16,           
+        Tlower=4.0,             
+        Tupper=40.0,            
+        Tinc=1.5,                
+        Tdec=0.1,                
+        Rscale=15.0,
+        Rincdec=0.01,
+        noiseRemovalThresholdFacBG=0.0008,
+        noiseRemovalThresholdFacFG=0.0012,
+        LSBPthreshold=10,
+        minCount=3)
+
+    cap = cv2.VideoCapture(path_video)
+
+    # Get video properties
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    
+    it = 0
+    frames = []
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+        frames.append(frame)
+    cap.release()
+    print(f"Beggining processing")
+    mask_video = []
+    box_struct = []
+    
+    for i, frame in enumerate(frames):
+        print(f"processing frame {i}")
+        # Apply LSBP background subtraction
+        fg_mask = bg_subtractor.apply(frame) 
+        # Optional: Morphological operations to reduce noise
+        # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        # fg_mask = cv2.morphologyEx(fg_mask, cv2.MORPH_OPEN, kernel)
+        if output_video:
+            mask_video.append(fg_mask)
+        if bb_generation:
+            box_struct.append(box_generator(fg_mask)) # assume black background and white foreground 0 and 255 respectively
+        it += 1
+    if output_video:
+        output_video = cv2.VideoWriter(out_video_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (frame_width, frame_height))
+        for fg_mask in mask_video:
+            output_video.write(fg_mask) 
+    if bb_generation:
+        write_xml(box_struct, out_xml)
+
+
+    output_video.release()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--path_xml', required=False, default="./LSBP_boxes.xml", help='Output xml')
+    parser.add_argument('--path_video', required=False, default="./AICity_data/train/S03/c010/vdo.avi", help='Input video')
+    args = parser.parse_args()
+    print("LSBP init")
+    lsbp(args.path_video, out_xml=args.path_xml)
+
