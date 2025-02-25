@@ -1,0 +1,39 @@
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# Build directories
+dist/
+build/
+
+# Other system files
+*.swp
+*.bak
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Custom folders to ignore
+AICity_data/
+results_opticalflow_kitti/
+
+*.mp4
+*.avi
