@@ -49,7 +49,7 @@ def color_selector(n):
     ]
     return colors[n % 10]
 
-def video_creation(gt_bb, results_bb, in_video_path, out_video_path='output_video_with_boxes.mp4'):
+def video_creation(gt_bb, results_bb, in_video_path, out_video_path='output_video_with_boxes.mp4', display=False):
     # Open the video
     cap = cv2.VideoCapture(in_video_path)
 
@@ -79,6 +79,7 @@ def video_creation(gt_bb, results_bb, in_video_path, out_video_path='output_vide
 
         for i,(_, result_bb) in enumerate(results_bb):
             if frame_number in result_bb:
+                print("Drawing bb preds")
                 for box in result_bb[frame_number]:
                     xtl, ytl, xbr, ybr = box
 
@@ -89,11 +90,12 @@ def video_creation(gt_bb, results_bb, in_video_path, out_video_path='output_vide
         output_video.write(frame)
         
         # Optional: Display the frame
-        cv2.imshow('Frame with Bounding Boxes', frame)
+        if display:
+            cv2.imshow('Frame with Bounding Boxes', frame)
 
-        # Break the loop if you press 'q' (quit) during the video
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+            # Break the loop if you press 'q' (quit) during the video
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
         
         frame_number += 1
 
@@ -159,7 +161,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--path_xml', required=False, default="./week1_anot.xml", help='Input xml')
-    parser.add_argument('--path_video', required=False, default="../AICity_data/AICity_data/train/S03/c010/vdo.avi", help='Input xml')
+    parser.add_argument('--path_video', required=False, default="./AICity_data/train/S03/c010/vdo.avi", help='Input xml')
     parser.add_argument("--pairs", required=True, type=str, nargs="+", help="List of (method_name, xml_path) pairs")
     args = parser.parse_args()
 

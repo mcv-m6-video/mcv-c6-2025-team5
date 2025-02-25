@@ -1,7 +1,13 @@
 import cv2
-import argparse
+import numpy as np
 
-def box_generator(mask):
+from bs4 import BeautifulSoup
+from lxml import etree
+
+import argparse
+import sys
+
+def box_generator(binary_image):
     bb_frame_result = []
     #binary_image = 255*mask
     num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(binary_image)
@@ -19,7 +25,7 @@ def write_xml(struct, output_path):
     root = etree.Element("annotations")
 
     for i_frame, frame in enumerate(struct):
-        frame_element = etree.SubElement(root, "frame", number=i_frame)
+        frame_element = etree.SubElement(root, "frame", number=str(i_frame))
 
         for (xtl, ytl, xbr, ybr) in frame:
             # Create a new <box> element and copy its attributes
@@ -31,23 +37,23 @@ def write_xml(struct, output_path):
     tree = etree.ElementTree(root)
     tree.write(output_path, pretty_print=True, xml_declaration=True, encoding="UTF-8") 
 
-def lsbp(path_video, out_video_path="./LSBP.mp4", out_xml="./LSBP_boxes.xml", output_video=False, display=False, bb_generation=False):
+def lsbp(path_video, out_video_path="./LSBP.mp4", out_xml="./LSBP_boxes.xml", make_output_video=True, display=False, bb_generation=True):
     # Fine-tuned LSBP background subtractor for street traffic detection
     print("Init script...")
     bg_subtractor = cv2.bgsegm.createBackgroundSubtractorLSBP(
         mc=cv2.bgsegm.LSBP_CAMERA_MOTION_COMPENSATION_NONE,
         nSamples=50,             
         LSBPRadius=16,           
-        Tlower=4.0,             
-        Tupper=40.0,            
+        Tlower=6.0,             
+        Tupper=55.0,            
         Tinc=1.5,                
         Tdec=0.1,                
-        Rscale=15.0,
+        Rscale=8.0,
         Rincdec=0.01,
         noiseRemovalThresholdFacBG=0.0008,
         noiseRemovalThresholdFacFG=0.0012,
         LSBPthreshold=10,
-        minCount=3)
+        minCount=4)
 
     cap = cv2.VideoCapture(path_video)
 
@@ -75,20 +81,24 @@ def lsbp(path_video, out_video_path="./LSBP.mp4", out_xml="./LSBP_boxes.xml", ou
         # Optional: Morphological operations to reduce noise
         # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
         # fg_mask = cv2.morphologyEx(fg_mask, cv2.MORPH_OPEN, kernel)
-        if output_video:
+        if make_output_video:
             mask_video.append(fg_mask)
         if bb_generation:
             box_struct.append(box_generator(fg_mask)) # assume black background and white foreground 0 and 255 respectively
         it += 1
-    if output_video:
-        output_video = cv2.VideoWriter(out_video_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (frame_width, frame_height))
-        for fg_mask in mask_video:
-            output_video.write(fg_mask) 
+        # if it > 100:
+        #     break
+    if make_output_video:
+        output_video = cv2.VideoWriter(out_video_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (frame_width, frame_height), isColor=False)
+        for i,fg_mask in enumerate(mask_video):
+            #cv2.imwrite(f"./frames/frame_{i}.png", fg_mask)
+            output_video.write(fg_mask)
+        output_video.release()
+
     if bb_generation:
         write_xml(box_struct, out_xml)
 
 
-    output_video.release()
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
