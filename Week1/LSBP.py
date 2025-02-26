@@ -7,17 +7,19 @@ from lxml import etree
 import argparse
 import sys
 
-def box_generator(binary_image):
+def box_generator(binary_image, min_area=500):
     bb_frame_result = []
     #binary_image = 255*mask
-    num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(binary_image)
-    for i in range(1, num_labels):  # Start from 1 to skip the background label (0)
-        x = stats[i, cv2.CC_STAT_LEFT]
-        y = stats[i, cv2.CC_STAT_TOP]
-        w = stats[i, cv2.CC_STAT_WIDTH]
-        h = stats[i, cv2.CC_STAT_HEIGHT]
-        bb = (x, y, x + w, y + h)
-        bb_frame_result.append(bb)
+    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    for cnt in contours:
+        area = cv2.contourArea(cnt)
+        if area >= min_area:
+            x, y, w, h = cv2.boundingRect(cnt)
+            x_tl = float(x)
+            y_tl = float(y)
+            x_br = float(x + w)
+            y_br = float(y + h)
+            bb_frame_result.append((x_tl, y_tl, x_br, y_br))
     return bb_frame_result
 
 def write_xml(struct, output_path):
@@ -54,7 +56,19 @@ def lsbp(path_video, out_video_path="./LSBP.mp4", out_xml="./LSBP_boxes.xml", ma
         noiseRemovalThresholdFacFG=0.0012,
         LSBPthreshold=10,
         minCount=4)
-
+# mc=cv2.bgsegm.LSBP_CAMERA_MOTION_COMPENSATION_NONE,
+        # nSamples=50,             
+        # LSBPRadius=16,           
+        # Tlower=4.0,             
+        # Tupper=40.0,            
+        # Tinc=1.5,                
+        # Tdec=0.1,                
+        # Rscale=15.0,
+        # Rincdec=0.01,
+        # noiseRemovalThresholdFacBG=0.0008,
+        # noiseRemovalThresholdFacFG=0.0012,
+        # LSBPthreshold=10,
+        # minCount=3)
     cap = cv2.VideoCapture(path_video)
 
     # Get video properties
@@ -76,11 +90,13 @@ def lsbp(path_video, out_video_path="./LSBP.mp4", out_xml="./LSBP_boxes.xml", ma
     
     for i, frame in enumerate(frames):
         print(f"processing frame {i}")
+        #blurred_frame = cv2.GaussianBlur(frame, (5, 5), 0)
         # Apply LSBP background subtraction
         fg_mask = bg_subtractor.apply(frame) 
-        # Optional: Morphological operations to reduce noise
-        # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-        # fg_mask = cv2.morphologyEx(fg_mask, cv2.MORPH_OPEN, kernel)
+        # Morphological operations to reduce noise
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+        fg_mask = cv2.morphologyEx(fg_mask, cv2.MORPH_OPEN, kernel)
+        fg_mask = cv2.morphologyEx(fg_mask, cv2.MORPH_CLOSE, kernel)
         if make_output_video:
             mask_video.append(fg_mask)
         if bb_generation:
