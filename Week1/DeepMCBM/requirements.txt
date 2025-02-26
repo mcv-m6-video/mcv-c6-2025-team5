@@ -1,0 +1,13 @@
+autopep8==1.6.0
+joblib==1.1.0
+natsort==8.1.0
+ninja==1.10.2.3
+opencv-python==4.5.5.62
+pycodestyle==2.8.0
+scikit-learn==1.0.2
+seaborn==0.11.2
+threadpoolctl==3.1.0
+toml==0.10.2
+torch-summary==1.4.5
+torchsummary==1.5.1
+tqdm==4.62.3

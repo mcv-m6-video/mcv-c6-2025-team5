@@ -47,26 +47,28 @@ def AP_50_metric(gt, json_pred, K = 10):
             #Ugly workaround to avoid spam cli
             old_stdout = sys.stdout
             sys.stdout = io.StringIO()
+            try:
+                # Load shuffled predictions into COCO
+                coco_pred = gt.loadRes(temp_pred_path)
 
-            # Load shuffled predictions into COCO
-            coco_pred = gt.loadRes(temp_pred_path)
-
-            # Run COCO evaluation
-            coco_eval = COCOeval(gt, coco_pred, "bbox")
-            coco_eval.params.imgIds = [image_id]  # Evaluate only this image
+                # Run COCO evaluation
+                coco_eval = COCOeval(gt, coco_pred, "bbox")
+                coco_eval.params.imgIds = [image_id]  # Evaluate only this image
             
-            coco_eval.evaluate()
-            coco_eval.accumulate()
-            coco_eval.summarize()  # This won't print anything
+                coco_eval.evaluate()
+                coco_eval.accumulate()
+                coco_eval.summarize()  # This won't print anything
 
+
+                # Store AP50 result (index 1 in stats array corresponds to AP50)
+                ap_values.append(coco_eval.stats[1])
+            except Exception as e:
+                print(image_id, e)
             # Restore stdout
             sys.stdout = old_stdout
-
-            # Store AP50 result (index 1 in stats array corresponds to AP50)
-            ap_values.append(coco_eval.stats[1])
-
         # Compute mean AP50 for this image
-        ap_per_image[image_id] = np.mean(ap_values)
+        if len(ap_values) != 0:
+            ap_per_image[image_id] = np.mean(ap_values)
 
     # Compute final AP50 for the video (average of all image AP50s)
     video_ap50 = np.mean(list(ap_per_image.values()))
