@@ -84,15 +84,7 @@ def compute_adaptive_background(frames, init_mean, init_std, alpha, ro, save_pat
 
 
 
-def process_mask(mask, threshold=3, min_area=400):
-    """
-    Processes each frame of the binary segmentation mask to remove noise and extract bounding boxes.
-
-    :param mask: List or array of binary segmentation frames (0 or 1 values).
-    :param threshold: Z-score threshold for object detection.
-    :param min_area: Minimum area of objects to be considered valid.
-    :return: List of bounding boxes per frame.
-    """
+def process_mask(mask, threshold=9, min_area=400):
     result = []
     for frame in mask:
         bb_frame_result = []
@@ -141,11 +133,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--path_xml', required=False, default="./output_boxes.xml", help='Output XML path')
     parser.add_argument('--path_video', required=False, default="./AICity_data/train/S03/c010/vdo.avi", help='Input video path')
-    parser.add_argument('--alpha', required=False, type=float, default=5.0, help='Alpha factor')
-    parser.add_argument('--ro', required=False, type=float, default=0.1, help='Ro factor')
+    parser.add_argument('--alpha', required=False, type=float, default=9.0, help='Alpha factor')
+    parser.add_argument('--ro', required=False, type=float, default=0.6, help='Ro factor')
     parser.add_argument('--video_init', required=False, type=float, default=0.25, help='Initial percentage of video to use')
-    parser.add_argument('--output_dir', required=False, default="./output_masks", help='Directory for output masks')
-    parser.add_argument('--output_video', required=False, default="./output_masks/masks.avi", help='Output video path')
+    parser.add_argument('--output_dir', required=False, default="./output_masks_refine", help='Directory for output masks')
 
     args = parser.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
