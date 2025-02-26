@@ -1,6 +1,17 @@
 # mcv-c6-2025-team5
 
-## RUN MOG and LSBP
+## RUN Fixed gaussian
+* Everything can be executed and seen in the [notebook](./WEEK_1_colab_version.ipynb)
+
+## RUN Adaptative gaussian
+* Having the AICityData on the same folder as the scripts
+
+* Execute adaptative gaussian:
+```
+python adaptive_gaussian_background_model.py --path_video ./AICity_data/train/S03/c010/vdo.avi --alpha 9 --ro 0.6
+```
+
+## RUN MOG2 and LSBP
 * Having the AICityData on the same folder as the scripts
 
 * Execute MOG2:
