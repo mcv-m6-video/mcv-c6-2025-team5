@@ -124,8 +124,13 @@ def gt_generate_json(gt_bb, path="./gt.json"):
     json_dict["annotations"] = []
     json_dict["categories"] = [{ "id": 1, "name": "foreground" }]
     counter = 0
+    max_frame = 0
+    set_frames = set()
     for frame_numb in (sorted(gt_bb.keys())):
         json_dict["images"].append({ "id": frame_numb, "width": WIDTH, "height": HEIGHT })
+        if frame_numb > max_frame:
+            max_frame = frame_numb
+        set_frames.add(frame_numb)
         # print(f"Frame: {frame_numb}")
         for (xtl, ytl, xbr, ybr) in (gt_bb[frame_numb]):
             # print(f"Iterator bb:{i}")
@@ -136,6 +141,10 @@ def gt_generate_json(gt_bb, path="./gt.json"):
             bbox = [bb_x, bb_y, bb_width, bb_height]
             json_dict["annotations"].append({ "id": counter, "image_id": frame_numb, "category_id": 1, "bbox": bbox, "area": bb_width*bb_height, "iscrowd": 0 })
             counter += 1
+
+    for i in range(max_frame+1):
+        if not i in set_frames:
+            json_dict["images"].append({ "id": i, "width": WIDTH, "height": HEIGHT })
 
     with open(path, "w") as json_file:
         json.dump(json_dict, json_file, indent=4)
@@ -182,6 +191,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     name_xml_pairs = parse_pairs(args.pairs)
+    print(f"args: {name_xml_pairs}")
     metric(args.path_xml, name_xml_pairs)
 
     # gt_bb = read_xml(args.path_xml,gt=True)
