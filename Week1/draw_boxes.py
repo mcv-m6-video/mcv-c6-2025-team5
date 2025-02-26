@@ -79,7 +79,6 @@ def video_creation(gt_bb, results_bb, in_video_path, out_video_path='output_vide
 
         for i,(_, result_bb) in enumerate(results_bb):
             if frame_number in result_bb:
-                print("Drawing bb preds")
                 for box in result_bb[frame_number]:
                     xtl, ytl, xbr, ybr = box
 
