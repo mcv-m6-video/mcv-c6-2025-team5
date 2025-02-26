@@ -32,5 +32,5 @@ python ../vid_to_frame.py --video path/to/vdo.avi --output path/to/output/vdo
 /mnt/home/.conda/envs/mcbm/bin/python src/DeepMCBM.py --parent_dir .path/to/output/vdo --dir frames_vdo_eval75 --no_train_STN --no_train_BMN 
 ```
 
-XML result file: `DeepMCBM/output/frames_vdo_eval75/my_run/annotations.xml`
-video result file: `DeepMCBM/output/frames_vdo_eval75/my_run/side_by_side.mp4`
+XML result file: `DeepMCBM/output/frames_vdo/my_run/annotations.xml`
+video result file: `DeepMCBM/output/frames_vdo/my_run/side_by_side.mp4`
