@@ -16,7 +16,7 @@ def generate_basic_gt(struct, w, h, path="week2_gt.json"):
     max_frame = 0
     set_frames = set()
     for frame_numb in (sorted(struct.keys())):
-        json_dict["images"].append({ "id": frame_numb,"file_name":str(frame_numb)+".png", "width": w, "height": h })
+        json_dict["images"].append({ "id": frame_numb,"file_name":str(frame_numb)+".jpg", "width": w, "height": h })
         if frame_numb > max_frame:
             max_frame = frame_numb
         set_frames.add(frame_numb)
@@ -56,8 +56,8 @@ if __name__ == '__main__':
     
     soup = BeautifulSoup(xml_content, "xml")
     tracks = soup.find_all("track")
-    width = (soup.find("width").text)
-    height = (soup.find("height").text)
+    width = int(soup.find("width").text)
+    height = int(soup.find("height").text)
     
     for track in tracks:
         track_id = track.get('id')
