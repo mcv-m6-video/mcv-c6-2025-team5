@@ -37,3 +37,5 @@ results_opticalflow_kitti/
 
 *.mp4
 *.avi
+*.ipynb_checkpoints*
+train
