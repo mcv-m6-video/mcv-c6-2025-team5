@@ -117,9 +117,10 @@ def video_creation(gt_bb, result_bb, in_video_path, out_video_path='output_video
         if frame_number in result_bb:
             for (box, score) in result_bb[frame_number]:
                 xtl, ytl, xbr, ybr = box
-                cv2.rectangle(frame, (int(xtl), int(ytl)), (int(xbr), int(ybr)), (255,0,0), 2)  # Blue box with thickness 2
-                label = f"{score:.2f}"
-                cv2.putText(frame, label, (int(xtl), int(ytl) - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 2)
+                if score >= 0.5:
+                    cv2.rectangle(frame, (int(xtl), int(ytl)), (int(xbr), int(ybr)), (255,0,0), 2)  # Blue box with thickness 2
+                    label = f"{score:.2f}"
+                    cv2.putText(frame, label, (int(xtl), int(ytl) - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 2)
 
 
         # Write the frame with boxes to the output video

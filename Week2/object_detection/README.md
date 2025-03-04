@@ -1,6 +1,17 @@
-# mcv-c6-2025-team5 Week 1
+# mcv-c6-2025-team5 Week 2
 
-## RUN Fixed gaussian
+## Object detection
+### Off the shelf inferences
+### Fine tunning
+### Scores and bounding boxes
+
+* Run off the shelf fast r cnn
+* Run fine tunning, with k fold strategy
+
+* Draw boxes 
+
+## Object tracking
+
 * Everything can be executed and seen in the [notebook](./WEEK_1_colab_version.ipynb)
 
 ## RUN Adaptative gaussian
