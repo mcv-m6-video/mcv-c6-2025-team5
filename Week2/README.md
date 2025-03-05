@@ -37,4 +37,4 @@ python finetune_4fold.py
 
 ## Object tracking
 
-* Everything can be seen in the [notebook](./WEEK2_Tracking.ipynb) or executed in the following [Google Colab]()
+* Everything can be seen in the [notebook](./WEEK2_Tracking.ipynb) or executed in the following [Google Colab](https://colab.research.google.com/drive/11zDIZbtiqjSI3tevftFfwozGUBQi6_kG?hl=es#scrollTo=n76HOGLQmSPc)
