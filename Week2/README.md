@@ -4,6 +4,7 @@
 ### Off the shelf inferences
 * To execute the FAST R CNN inference execute this command:
 ```
+python inference.py
 ```
 ### Off the shelf metric computation
 
@@ -19,7 +20,21 @@ python evaluate_method.py --pairs "(mask_rcnn, ./predictions/mask_rcnn_predictio
 
 ```
 ### Fine tunning
+* Before fine tunning we must execute:
+```
+python kfold_library.py
+```
+
+* To execute the fine tunning of the model, and evaluation, using strategy A:
+```
+python finetune.py
+```
+
+* To execute the fine tunning of the model, and evaluation, using strategy B or C:
+```
+python finetune_4fold.py
+```
 
 ## Object tracking
 
-* Everything can be executed and seen in the [notebook](./WEEK2_Tracking.ipynb)
+* Everything can be seen in the [notebook](./WEEK2_Tracking.ipynb) or executed in the following [Google Colab]()
