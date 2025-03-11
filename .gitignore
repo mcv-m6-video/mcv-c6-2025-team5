@@ -39,3 +39,5 @@ results_opticalflow_kitti/
 *.avi
 *.ipynb_checkpoints*
 train
+*aic19-track1*
+*.egg-info*
