@@ -1,0 +1,7 @@
+Time FlowFormer++
+Mean time: 0.3430201580097248 seconds
+std: 0.007030555121181076 seconds
+
+Time NeuFlow2
+Mean time: 0.013479726612318091
+std: 0.031424380661125885
