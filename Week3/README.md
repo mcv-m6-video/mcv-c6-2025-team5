@@ -10,7 +10,15 @@
 
 #### Pyflow
 
+- Clone the following [repository](https://github.com/pathak22/pyflow)
+- Follow the installation instructions.
+- Add the demo.py for two images or inference_video.py for npy for whole video sequence
+- The outputs are in npy 
+
 #### RAFT
+
+- Install torch and torchvision
+- Use the inference.py to get npy for two images or inference_video.py for npy for whole video sequence
 
 #### FlowFormer++
 
