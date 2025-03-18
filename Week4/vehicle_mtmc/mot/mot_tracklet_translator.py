@@ -35,9 +35,3 @@ if __name__ == "__main__":
     save_tracklets(array_tracklets, os.path.join(args.output_path,"translated_tracklets.pkl"))
     save_tracklets_csv(array_tracklets, os.path.join(args.output_path, "translated_tracklets.csv"))
     save_tracklets_txt(array_tracklets, os.path.join(args.output_path, "translated_tracklets.txt"))
-
-
-    # d = load_tracklets("./output/cityflow_s01/0_vdo/mot.pkl")
-    # print("Type:", type(d))
-    # print(d)
-    # d[0]
