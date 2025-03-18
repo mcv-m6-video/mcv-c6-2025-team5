@@ -1,0 +1,2 @@
+      IDF1   IDP   IDR  Rcll   Prcn GT MT PT ML FP  FN IDs  FM  MOTA    MOTP IDt IDa IDm   idfp    idfn    idtp
+MTMC 82.4% 85.4% 79.6% 93.2% 100.0% 82 77  5  0  0 335 215  57 88.8% 100.00% 209  12  13  665.0  1000.0  3897.0

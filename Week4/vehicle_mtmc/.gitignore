@@ -6,7 +6,7 @@
 datasets/*/
 datasets/id_split*
 datasets/*.csv
-output/*
+output/*/*.avi
 output_save/*
 models/*
 mot/deep_sort_orig/
@@ -14,3 +14,6 @@ mot/deep_sort_orig/
 __py*
 .venv
 .jedi
+model/resnet50_mixstyle
+model/color_svm.pkl
+model/type_svm.pkl

@@ -1,0 +1,143 @@
+INFO     [2025-03-18 18:10:36,962]: All config checks passed.
+INFO     [2025-03-18 18:10:36,962]: All config checks passed.
+INFO     [2025-03-18 18:10:36,963]: All config checks passed.
+INFO     [2025-03-18 18:10:36,964]: All config checks passed.
+INFO     [2025-03-18 18:10:36,964]: All config checks passed.
+INFO     [2025-03-18 18:10:36,965]: All config checks passed.
+INFO     [2025-03-18 18:10:36,965]: All config checks passed.
+INFO     [2025-03-18 18:10:36,966]: All config checks passed.
+INFO     [2025-03-18 18:23:08,746]: All config checks passed.
+INFO     [2025-03-18 18:23:08,747]: All config checks passed.
+INFO     [2025-03-18 18:23:08,748]: All config checks passed.
+INFO     [2025-03-18 18:23:08,748]: All config checks passed.
+INFO     [2025-03-18 18:23:08,749]: All config checks passed.
+INFO     [2025-03-18 18:23:08,750]: All config checks passed.
+INFO     [2025-03-18 18:23:08,750]: All config checks passed.
+INFO     [2025-03-18 18:23:08,750]: All config checks passed.
+INFO     [2025-03-18 18:36:56,178]: 
+Tracking finished over 2141 frames, total time: 13 min 31 sec, average fps: 2.638.
+INFO     [2025-03-18 18:36:56,186]: MOT Benchmark (times in ms)
+name                   min      mean      max   
+-------------------------------------------------
+detector             38.1079  45.1496  1221.2112
+detection filter      0.2475   0.434     2.4724 
+reid                 165.9181 316.2162  576.9403
+nonmax suppression    0.6325   1.0313    9.1572 
+attribute extraction  1.1544   1.3752    4.6661 
+tracker               2.5046   3.7174    7.9873 
+displays              0.1757   3.7911    8.867  
+-------------------------------------------------
+INFO     [2025-03-18 18:36:56,267]: Tracking done. #Tracklets: 96
+INFO     [2025-03-18 18:36:57,011]: All config checks passed.
+INFO     [2025-03-18 18:59:35,676]: 
+Tracking finished over 2279 frames, total time: 22 min 19 sec, average fps: 1.701.
+INFO     [2025-03-18 18:59:35,685]: MOT Benchmark (times in ms)
+name                   min      mean     max   
+------------------------------------------------
+detector             38.9676  42.7938  73.2796 
+detection filter      0.3803   0.5717   1.6501 
+reid                 361.0733 516.2412 766.5205
+nonmax suppression    0.8848   1.2336   8.8582 
+attribute extraction  1.1635   1.5188  29.8944 
+tracker               2.6538   4.6912  15.0924 
+displays              0.1783   5.2605  14.6899 
+------------------------------------------------
+INFO     [2025-03-18 18:59:35,827]: Tracking done. #Tracklets: 50
+INFO     [2025-03-18 18:59:37,241]: All config checks passed.
+INFO     [2025-03-18 19:10:59,348]: 
+Tracking finished over 2422 frames, total time: 11 min 1 sec, average fps: 3.662.
+INFO     [2025-03-18 19:10:59,357]: MOT Benchmark (times in ms)
+name                   min      mean     max   
+------------------------------------------------
+detector             39.0496  42.5768  56.2611 
+detection filter      0.2418   0.3617   1.2679 
+reid                 140.8505 207.9931 327.2414
+nonmax suppression    0.4864   0.6639   3.2275 
+attribute extraction  0.8676   1.2617   4.7393 
+tracker               1.6863   2.6728   5.6038 
+displays              0.2215   2.4248   6.5694 
+------------------------------------------------
+INFO     [2025-03-18 19:10:59,420]: Tracking done. #Tracklets: 36
+INFO     [2025-03-18 19:11:00,004]: All config checks passed.
+INFO     [2025-03-18 19:19:07,103]: 
+Tracking finished over 2415 frames, total time: 7 min 46 sec, average fps: 5.178.
+INFO     [2025-03-18 19:19:07,110]: MOT Benchmark (times in ms)
+name                   min     mean     max   
+-----------------------------------------------
+detector             39.4683 57.7655  101.0787
+detection filter      0.1254  0.2661   1.2078 
+reid                  0.0391 110.8856 230.0956
+nonmax suppression    0.0458  0.4115   2.9216 
+attribute extraction  0.0119  2.7242   42.124 
+tracker               0.5496  1.6913   4.9582 
+displays              0.0725  1.1578   3.1238 
+-----------------------------------------------
+INFO     [2025-03-18 19:19:07,133]: Tracking done. #Tracklets: 24
+INFO     [2025-03-18 19:19:07,351]: All config checks passed.
+INFO     [2025-03-18 19:32:22,739]: 
+Tracking finished over 2332 frames, total time: 13 min 3 sec, average fps: 2.977.
+INFO     [2025-03-18 19:32:22,746]: MOT Benchmark (times in ms)
+name                   min      mean     max   
+------------------------------------------------
+detector             38.7335  42.0123  65.8762 
+detection filter      0.2301   0.3549   1.3204 
+reid                 180.9936 277.2384 467.4616
+nonmax suppression    0.6788   0.8769   5.0535 
+attribute extraction  1.1208   1.3617   4.7832 
+tracker               2.3961   3.4962    6.49  
+displays              0.1907   3.8794   8.9619 
+------------------------------------------------
+INFO     [2025-03-18 19:32:22,838]: Tracking done. #Tracklets: 49
+INFO     [2025-03-18 19:32:23,691]: All config checks passed.
+INFO     [2025-03-18 19:49:54,312]: 
+Tracking finished over 1928 frames, total time: 17 min 20 sec, average fps: 1.853.
+INFO     [2025-03-18 19:49:54,320]: MOT Benchmark (times in ms)
+name                   min      mean     max   
+------------------------------------------------
+detector             38.5017  42.1774  55.7814 
+detection filter      0.4625   0.596    0.9925 
+reid                 387.1155 476.6559 643.7881
+nonmax suppression    0.9792   1.1662  15.2652 
+attribute extraction  1.1089   1.4489   6.7649 
+tracker               3.8249   4.8604   8.3823 
+displays              0.2823   6.0868   9.5515 
+------------------------------------------------
+INFO     [2025-03-18 19:49:54,443]: Tracking done. #Tracklets: 28
+INFO     [2025-03-18 19:49:55,847]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-18 19:49:55,849]: All config checks passed.
+INFO     [2025-03-18 19:59:52,798]: All config checks passed.
+INFO     [2025-03-18 19:59:52,799]: All config checks passed.
+INFO     [2025-03-18 19:59:52,799]: All config checks passed.
+INFO     [2025-03-18 19:59:52,800]: All config checks passed.
+INFO     [2025-03-18 19:59:52,801]: All config checks passed.
+INFO     [2025-03-18 19:59:52,801]: All config checks passed.
+INFO     [2025-03-18 19:59:52,802]: All config checks passed.
+INFO     [2025-03-18 19:59:52,802]: All config checks passed.
+INFO     [2025-03-18 20:02:53,347]: All config checks passed.
+INFO     [2025-03-18 20:02:53,348]: All config checks passed.
+INFO     [2025-03-18 20:02:53,349]: All config checks passed.
+INFO     [2025-03-18 20:02:53,349]: All config checks passed.
+INFO     [2025-03-18 20:02:53,350]: All config checks passed.
+INFO     [2025-03-18 20:02:53,350]: All config checks passed.
+INFO     [2025-03-18 20:02:53,351]: All config checks passed.
+INFO     [2025-03-18 20:02:53,351]: All config checks passed.
+INFO     [2025-03-18 20:03:20,659]: All config checks passed.
+INFO     [2025-03-18 20:03:20,660]: All config checks passed.
+INFO     [2025-03-18 20:03:20,661]: All config checks passed.
+INFO     [2025-03-18 20:03:20,661]: All config checks passed.
+INFO     [2025-03-18 20:03:20,662]: All config checks passed.
+INFO     [2025-03-18 20:03:20,663]: All config checks passed.
+INFO     [2025-03-18 20:03:20,663]: All config checks passed.
+INFO     [2025-03-18 20:03:20,663]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-18 20:03:20,664]: All config checks passed.
+INFO     [2025-03-18 20:03:20,714]: Tracklets loaded for camera 0: 96 in total.
+INFO     [2025-03-18 20:03:20,868]: Tracklets loaded for camera 1: 50 in total.
+INFO     [2025-03-18 20:03:20,903]: Tracklets loaded for camera 2: 36 in total.
+INFO     [2025-03-18 20:03:20,914]: Tracklets loaded for camera 3: 24 in total.
+INFO     [2025-03-18 20:03:21,061]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-18 20:03:21,133]: Tracklets loaded for camera 5: 28 in total.
+INFO     [2025-03-18 20:03:21,134]: Starting clustering of 283 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-18 20:03:23,296]: Precomputation finished, took 2.162 s.
+INFO     [2025-03-18 20:03:23,806]: mtmc clustering took 2.673 seconds: 176 final tracks.
+INFO     [2025-03-18 20:03:24,736]: MTMC result (176 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03/mtmc_tracklets.pkl
+INFO     [2025-03-18 20:03:24,737]: Express: Running MTMC on all cameras finished. Saving final results ...

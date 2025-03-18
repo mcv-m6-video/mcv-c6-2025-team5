@@ -41,6 +41,3 @@ results_opticalflow_kitti/
 train
 *aic19-track1*
 *.egg-info*
-mcv-c6-2025-team5/Week4/vehicle_mtmc/model/resnet50_mixstyle
-mcv-c6-2025-team5/Week4/vehicle_mtmc/model/color_svm.pkl
-mcv-c6-2025-team5/Week4/vehicle_mtmc/model/type_svm.pkl

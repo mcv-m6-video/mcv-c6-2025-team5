@@ -45,9 +45,9 @@ def run_express_mtmc(cfg: CfgNode):
                 f"Error in the express config of camera {len(mot_configs) - 1}.")
             return None
 
-    # run MOT in all cameras
-    for mot_conf in mot_configs:
-        run_mot(mot_conf)
+    # # run MOT in all cameras
+    # for mot_conf in mot_configs:
+    #     run_mot(mot_conf)
 
     log.info("Express: Running MOT on all cameras finished. Running MTMC...")
 
