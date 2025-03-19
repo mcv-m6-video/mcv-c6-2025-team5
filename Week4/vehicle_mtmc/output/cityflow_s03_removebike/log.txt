@@ -1,0 +1,180 @@
+INFO     [2025-03-19 18:41:45,470]: All config checks passed.
+INFO     [2025-03-19 18:41:45,470]: All config checks passed.
+INFO     [2025-03-19 18:41:45,471]: All config checks passed.
+INFO     [2025-03-19 18:41:45,472]: All config checks passed.
+INFO     [2025-03-19 18:41:45,473]: All config checks passed.
+INFO     [2025-03-19 18:41:45,473]: All config checks passed.
+INFO     [2025-03-19 18:41:45,474]: All config checks passed.
+INFO     [2025-03-19 18:41:45,474]: All config checks passed.
+INFO     [2025-03-19 18:55:20,595]: 
+Tracking finished over 2141 frames, total time: 13 min 18 sec, average fps: 2.681.
+INFO     [2025-03-19 18:55:20,602]: MOT Benchmark (times in ms)
+name                   min      mean     max   
+------------------------------------------------
+detector             40.3607  45.0504 1044.8904
+detection filter      0.2217   0.4114   3.2775 
+reid                 158.6194 310.524  754.5056
+nonmax suppression    0.5987   0.9406  28.4686 
+attribute extraction  1.0321   1.3326   5.5616 
+tracker               1.5006   3.653   10.0992 
+displays              0.1016   3.7663  33.6971 
+------------------------------------------------
+INFO     [2025-03-19 18:55:20,683]: Tracking done. #Tracklets: 95
+INFO     [2025-03-19 18:55:21,419]: All config checks passed.
+INFO     [2025-03-19 18:55:22,529]: Evaluation results:
+      IDF1   IDP   IDR  Rcll   Prcn GT MT PT ML FP FN IDs  FM  MOTA    MOTP IDt IDa IDm  idfp  idfn    idtp
+MTMC 99.7% 99.8% 99.6% 99.8% 100.0% 14 14  0  0  0  3   3   1 99.7% 100.00%   0   3   0   4.0   7.0  1849.0
+
+INFO     [2025-03-19 18:55:22,540]: All config checks passed.
+INFO     [2025-03-19 19:18:32,024]: 
+Tracking finished over 2279 frames, total time: 22 min 50 sec, average fps: 1.663.
+INFO     [2025-03-19 19:18:32,033]: MOT Benchmark (times in ms)
+name                   min      mean     max   
+------------------------------------------------
+detector              40.302  44.0288  59.4769 
+detection filter      0.3877   0.5333   1.5812 
+reid                 393.0337 528.1685 703.6042
+nonmax suppression    0.9038   1.2052   7.2927 
+attribute extraction  1.205    1.5182   6.403  
+tracker               2.6193   4.7735  12.8107 
+displays              0.1709   5.4881  10.6144 
+------------------------------------------------
+INFO     [2025-03-19 19:18:32,167]: Tracking done. #Tracklets: 51
+INFO     [2025-03-19 19:18:33,677]: All config checks passed.
+INFO     [2025-03-19 19:18:34,771]: Evaluation results:
+      IDF1   IDP   IDR  Rcll   Prcn GT MT PT ML FP FN IDs  FM  MOTA    MOTP IDt IDa IDm   idfp   idfn   idtp
+MTMC 79.7% 84.3% 75.6% 89.8% 100.0% 17 15  2  0  0 92  12   3 88.4% 100.00%  10   4   2  127.0  219.0  680.0
+
+INFO     [2025-03-19 19:18:34,794]: All config checks passed.
+INFO     [2025-03-19 19:30:08,071]: 
+Tracking finished over 2422 frames, total time: 11 min 12 sec, average fps: 3.601.
+INFO     [2025-03-19 19:30:08,079]: MOT Benchmark (times in ms)
+name                   min      mean     max   
+------------------------------------------------
+detector             40.6139  44.4586  79.7768 
+detection filter      0.2208   0.3258   2.7103 
+reid                 140.6097 210.3071 314.3651
+nonmax suppression    0.4957   0.6781   7.5324 
+attribute extraction  0.8495   1.2794   4.8749 
+tracker               1.6537   2.6634   5.7995 
+displays              0.1922   2.4383   15.254 
+------------------------------------------------
+INFO     [2025-03-19 19:30:08,148]: Tracking done. #Tracklets: 31
+INFO     [2025-03-19 19:30:08,708]: All config checks passed.
+INFO     [2025-03-19 19:30:09,361]: Evaluation results:
+       IDF1    IDP    IDR   Rcll   Prcn GT MT PT ML FP FN IDs  FM   MOTA    MOTP IDt IDa IDm  idfp  idfn   idtp
+MTMC 100.0% 100.0% 100.0% 100.0% 100.0% 17 17  0  0  0  0   0   0 100.0% 100.00%   0   0   0   0.0   0.0  153.0
+
+INFO     [2025-03-19 19:30:09,373]: All config checks passed.
+INFO     [2025-03-19 19:38:24,453]: 
+Tracking finished over 2415 frames, total time: 7 min 54 sec, average fps: 5.092.
+INFO     [2025-03-19 19:38:24,460]: MOT Benchmark (times in ms)
+name                   min     mean    max   
+----------------------------------------------
+detector             40.9467 66.8249 119.3359
+detection filter      0.1135  0.271   1.8907 
+reid                  0.0546 100.883 240.195 
+nonmax suppression    0.0474  0.3825  1.8904 
+attribute extraction  0.0193  2.1393 56.9763 
+tracker               0.5648  1.8891 16.4373 
+displays              0.0741  1.3285  3.1409 
+----------------------------------------------
+INFO     [2025-03-19 19:38:24,482]: Tracking done. #Tracklets: 22
+INFO     [2025-03-19 19:38:24,717]: All config checks passed.
+INFO     [2025-03-19 19:38:25,444]: Evaluation results:
+      IDF1   IDP   IDR  Rcll   Prcn GT MT PT ML FP FN IDs  FM  MOTA    MOTP IDt IDa IDm  idfp   idfn   idtp
+MTMC 90.2% 94.9% 85.9% 90.6% 100.0% 17 12  5  0  0 71   0   6 90.6% 100.00%   1   0   1  35.0  106.0  647.0
+
+INFO     [2025-03-19 19:38:25,450]: All config checks passed.
+INFO     [2025-03-19 19:52:16,476]: 
+Tracking finished over 2332 frames, total time: 13 min 39 sec, average fps: 2.847.
+INFO     [2025-03-19 19:52:16,484]: MOT Benchmark (times in ms)
+name                   min      mean     max   
+------------------------------------------------
+detector             39.8719  44.4477  80.9429 
+detection filter      0.2232   0.3433   0.9959 
+reid                 184.7062 289.5841 493.9198
+nonmax suppression    0.674    0.9182   7.7331 
+attribute extraction  1.0498   1.4097   7.8351 
+tracker               2.1741   3.5586   8.9471 
+displays              0.1493   3.9378  21.2052 
+------------------------------------------------
+INFO     [2025-03-19 19:52:16,580]: Tracking done. #Tracklets: 49
+INFO     [2025-03-19 19:52:17,476]: All config checks passed.
+INFO     [2025-03-19 19:52:18,767]: Evaluation results:
+      IDF1   IDP   IDR  Rcll   Prcn GT MT PT ML FP  FN IDs  FM  MOTA    MOTP IDt IDa IDm  idfp   idfn    idtp
+MTMC 94.6% 98.4% 91.1% 92.6% 100.0% 14 13  1  0  0 184   8  17 92.3% 100.00%   6   4   2  38.0  222.0  2274.0
+
+INFO     [2025-03-19 19:52:18,785]: All config checks passed.
+INFO     [2025-03-19 20:10:12,410]: 
+Tracking finished over 1928 frames, total time: 17 min 43 sec, average fps: 1.814.
+INFO     [2025-03-19 20:10:12,418]: MOT Benchmark (times in ms)
+name                   min      mean     max   
+------------------------------------------------
+detector             39.8843  44.1568  80.4646 
+detection filter      0.4339   0.5644   7.1959 
+reid                 397.1708 485.2333 624.7716
+nonmax suppression    0.9601   1.912    15.007 
+attribute extraction  1.179    1.6115  18.3094 
+tracker               3.2468   4.894    9.6748 
+displays              0.1757   6.0839   15.281 
+------------------------------------------------
+INFO     [2025-03-19 20:10:12,538]: Tracking done. #Tracklets: 23
+INFO     [2025-03-19 20:10:13,910]: All config checks passed.
+INFO     [2025-03-19 20:10:14,548]: Evaluation results:
+       IDF1    IDP    IDR   Rcll   Prcn GT MT PT ML FP FN IDs  FM   MOTA    MOTP IDt IDa IDm  idfp  idfn  idtp
+MTMC 100.0% 100.0% 100.0% 100.0% 100.0%  1  1  0  0  0  0   0   0 100.0% 100.00%   0   0   0   0.0   0.0  17.0
+
+INFO     [2025-03-19 20:10:14,565]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-19 20:10:14,566]: All config checks passed.
+INFO     [2025-03-19 20:10:14,609]: Tracklets loaded for camera 0: 95 in total.
+INFO     [2025-03-19 20:10:14,840]: Tracklets loaded for camera 1: 51 in total.
+INFO     [2025-03-19 20:10:14,873]: Tracklets loaded for camera 2: 31 in total.
+INFO     [2025-03-19 20:10:14,885]: Tracklets loaded for camera 3: 22 in total.
+INFO     [2025-03-19 20:10:14,940]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-19 20:10:15,183]: Tracklets loaded for camera 5: 23 in total.
+INFO     [2025-03-19 20:10:15,184]: Starting clustering of 271 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-19 20:10:15,227]: Precomputation finished, took 0.042 s.
+INFO     [2025-03-19 20:10:15,649]: mtmc clustering took 0.464 seconds: 177 final tracks.
+INFO     [2025-03-19 20:10:16,358]: MTMC result (177 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03_removebike/mtmc_tracklets.pkl
+INFO     [2025-03-19 20:10:16,358]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-19 20:11:39,393]: All config checks passed.
+INFO     [2025-03-19 20:11:39,393]: All config checks passed.
+INFO     [2025-03-19 20:11:39,394]: All config checks passed.
+INFO     [2025-03-19 20:11:39,395]: All config checks passed.
+INFO     [2025-03-19 20:11:39,396]: All config checks passed.
+INFO     [2025-03-19 20:11:39,396]: All config checks passed.
+INFO     [2025-03-19 20:11:39,397]: All config checks passed.
+INFO     [2025-03-19 20:11:39,397]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-19 20:11:39,397]: All config checks passed.
+INFO     [2025-03-19 20:11:39,449]: Tracklets loaded for camera 0: 95 in total.
+INFO     [2025-03-19 20:11:39,609]: Tracklets loaded for camera 1: 51 in total.
+INFO     [2025-03-19 20:11:39,643]: Tracklets loaded for camera 2: 31 in total.
+INFO     [2025-03-19 20:11:39,655]: Tracklets loaded for camera 3: 22 in total.
+INFO     [2025-03-19 20:11:39,807]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-19 20:11:39,879]: Tracklets loaded for camera 5: 23 in total.
+INFO     [2025-03-19 20:11:39,880]: Starting clustering of 271 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-19 20:11:42,119]: Precomputation finished, took 2.239 s.
+INFO     [2025-03-19 20:11:42,545]: mtmc clustering took 2.665 seconds: 177 final tracks.
+INFO     [2025-03-19 20:11:43,307]: MTMC result (177 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03_removebike/mtmc_tracklets.pkl
+INFO     [2025-03-19 20:11:43,307]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-19 20:11:46,746]: Ground truth annotations are provided, trying to evaluate MTMC ...
+INFO     [2025-03-19 20:11:46,746]: All config checks passed.
+INFO     [2025-03-19 20:11:51,492]: Evaluation results:
+      IDF1   IDP   IDR  Rcll   Prcn GT MT PT ML FP   FN IDs  FM  MOTA    MOTP IDt IDa IDm   idfp    idfn    idtp
+MTMC 58.2% 87.5% 43.6% 49.8% 100.0% 18  2 15  1  0 3101  10  17 49.6% 100.00%   4   4   1  384.0  3485.0  2689.0
+
+INFO     [2025-03-19 20:11:51,493]: Evaluation successful.
+INFO     [2025-03-19 20:19:26,892]: Express: video 0 saved.
+INFO     [2025-03-19 20:36:20,506]: Express: video 1 saved.
+INFO     [2025-03-19 20:46:46,226]: Express: video 2 saved.
+INFO     [2025-03-19 20:53:56,278]: Express: video 3 saved.
+INFO     [2025-03-19 21:04:53,861]: Express: video 4 saved.
+INFO     [2025-03-19 21:18:34,015]: Express: video 5 saved.
+INFO     [2025-03-19 21:18:34,016]: Ground truth annotations are provided, trying to evaluate MTMC ...
+INFO     [2025-03-19 21:18:34,018]: All config checks passed.
+INFO     [2025-03-19 21:18:38,673]: Evaluation results:
+      IDF1   IDP   IDR  Rcll   Prcn GT MT PT ML FP   FN IDs  FM  MOTA    MOTP IDt IDa IDm   idfp    idfn    idtp
+MTMC 58.2% 87.5% 43.6% 49.8% 100.0% 18  2 15  1  0 3101  10  17 49.6% 100.00%   4   4   1  384.0  3485.0  2689.0
+
+INFO     [2025-03-19 21:18:38,674]: Evaluation successful.

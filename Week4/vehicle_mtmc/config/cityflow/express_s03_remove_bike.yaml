@@ -1,0 +1,57 @@
+
+OUTPUT_DIR: "output/cityflow_s03_removebike"
+DEBUG_RUN: false
+FONTSIZE: 15
+MOT:
+  REID_MODEL_OPTS: "/home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/model/resnet50_mixstyle/opts.yaml"
+  REID_MODEL_CKPT: "/home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/model/resnet50_mixstyle/net_19.pth"
+  REID_FP16: false
+  REID_BATCHSIZE: 1
+  DETECTOR: "yolov5x6"
+  TRACKER: "bytetrack_iou"
+  MIN_FRAMES: 5
+  SHOW: false
+  VIDEO_OUTPUT: false
+  TRACKED_CLASSES: [2, 5, 7]
+  STATIC_ATTRIBUTES:
+    - color: "/home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/model/color_svm.pkl"
+    - type: "/home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/model/type_svm.pkl"
+  REFINE: false
+MTMC:
+  CAMERA_LAYOUT: 
+  LINKAGE: 'average'
+  MIN_SIM: 0.5
+EXPRESS:
+  FINAL_VIDEO_OUTPUT: true
+  CAMERAS:
+    - "video": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c010/vdo.avi"
+      "detection_mask": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c010/roi.jpg"
+      "calibration": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c010/calibration.txt"
+    - "video": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c011/vdo.avi"
+      "detection_mask": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c011/roi.jpg"
+      "calibration": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c011/calibration.txt"
+    - "video": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c012/vdo.avi"
+      "detection_mask": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c012/roi.jpg"
+      "calibration": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c012/calibration.txt"
+    - "video": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c013/vdo.avi"
+      "detection_mask": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c013/roi.jpg"
+      "calibration": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c013/calibration.txt"
+    - "video": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c014/vdo.avi"
+      "detection_mask": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c014/roi.jpg"
+      "calibration": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c014/calibration.txt"
+    - "video": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c015/vdo.avi"
+      "detection_mask": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c015/roi.jpg"
+      "calibration": "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c015/calibration.txt"
+EVAL:
+  MIN_IOU: 0.35
+  IGNORE_FP: true
+  DROP_SINGLE_CAM: true
+  GROUND_TRUTHS:
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c010/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c011/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c012/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c013/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c014/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c015/gt/gt.txt"
+
+    

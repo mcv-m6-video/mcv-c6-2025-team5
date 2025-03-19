@@ -14,7 +14,7 @@ def parse_args(description):
                         help="do not log to stdout")
     parser.add_argument("--save_video", action="store_true",
                         help="save video to mp4 file")
-    parser.add_argument("--run_mot", action="store_true",
+    parser.add_argument("--mot", action="store_true",
                         help="if yes, run the mot for each camera")                  
     return parser.parse_args()
 
