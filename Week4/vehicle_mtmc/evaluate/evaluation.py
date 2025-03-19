@@ -7,6 +7,44 @@ from tools.metrics import iou
 from tools.conversion import to_frame_list, load_motchallenge_format
 from evaluate.experimental import greedy_matching
 
+from evaluate.hota import calculate_metrics_taking_only_GTobject_into_account
+
+from collections import defaultdict
+
+def parse_tracking_hota(frames):
+    """
+    Reads the detection text file and returns data grouped by frame.
+    Each element in the returned list corresponds to a single frame,
+    which itself is a list of dictionaries.
+    Each dictionary has keys: 'bbox' -> [left, top, width, height], 'conf' -> conf_value
+
+    :param filepath: Path to the input text file.
+    """
+
+    # Using a dictionary to accumulate detections by frame number:
+    frames_dict = defaultdict(list)
+    # frames[fr].append((tx, ty, w, h, id_))
+
+    for i, frame in enumerate(frames):
+        for (tx, ty, w, h, id_) in frame:
+            track_id = int(id_)
+            left  = float(tx)
+            top   = float(ty)
+            width = float(w)
+            height= float(h)
+            conf  = 1.0
+        
+            detection = {
+                'bbox': [left, top, width, height],
+                'conf': conf,
+                'track_id': track_id
+            }
+            # Append the detection to the corresponding frame
+            if not i in frames_dict:
+                frames_dict[i] = []
+            frames_dict[i].append(detection)
+
+    return frames_dict
 
 def remove_duplicates(df: pd.DataFrame) -> pd.DataFrame:
     """Remove duplicates of the same id in the same frame (should never happen)"""
@@ -42,6 +80,11 @@ def evaluate_dfs(test_df: pd.DataFrame, pred_df: pd.DataFrame, min_iou=0.5, igno
     test_by_frame = to_frame_list(test_df, total_frames)
     pred_by_frame = to_frame_list(pred_df, total_frames)
 
+    gt_hota = parse_tracking_hota(test_by_frame)
+    pred_hota = parse_tracking_hota(pred_by_frame)
+    metric_hota = calculate_metrics_taking_only_GTobject_into_account(pred_hota, gt_hota, iou_threshold=0.5)
+    
+
     for gt, preds in zip(test_by_frame, pred_by_frame):
         mat_gt = np.array([x[:4] for x in gt])
         mat_pred = np.array([x[:4] for x in preds])
@@ -76,6 +119,7 @@ def evaluate_dfs(test_df: pd.DataFrame, pred_df: pd.DataFrame, min_iou=0.5, igno
     metrics.extend(["idfp", "idfn", "idtp"])
     mh = mm.metrics.create()
     summary = mh.compute(acc, metrics=metrics, name="MTMC")
+    print("HOTA: ", metric_hota[0]["HOTA(0)"]*100, "%")
     return summary
 
 
