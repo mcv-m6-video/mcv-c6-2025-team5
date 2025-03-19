@@ -148,3 +148,110 @@ INFO     [2025-03-18 18:45:24,476]: All config checks passed.
 INFO     [2025-03-18 18:45:24,476]: All config checks passed.
 INFO     [2025-03-18 18:45:24,477]: All config checks passed.
 INFO     [2025-03-18 18:45:24,477]: All config checks passed.
+INFO     [2025-03-18 22:35:58,363]: All config checks passed.
+INFO     [2025-03-18 22:35:58,364]: All config checks passed.
+INFO     [2025-03-18 22:35:58,365]: All config checks passed.
+INFO     [2025-03-18 22:35:58,365]: All config checks passed.
+INFO     [2025-03-18 22:35:58,366]: All config checks passed.
+INFO     [2025-03-18 22:35:58,367]: All config checks passed.
+INFO     [2025-03-18 22:35:58,367]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-18 22:35:58,367]: All config checks passed.
+INFO     [2025-03-18 22:35:58,367]: Camera layout loaded with 5 cams.
+INFO     [2025-03-18 22:35:58,407]: Tracklets loaded for camera 0: 107 in total.
+INFO     [2025-03-18 22:35:58,441]: Tracklets loaded for camera 1: 100 in total.
+INFO     [2025-03-18 22:35:58,580]: Tracklets loaded for camera 2: 138 in total.
+INFO     [2025-03-18 22:35:58,621]: Tracklets loaded for camera 3: 106 in total.
+INFO     [2025-03-18 22:35:58,776]: Tracklets loaded for camera 4: 128 in total.
+INFO     [2025-03-18 22:35:58,778]: Starting clustering of 579 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-18 22:36:01,278]: Precomputation finished, took 2.500 s.
+INFO     [2025-03-18 22:36:01,943]: mtmc clustering took 3.165 seconds: 244 final tracks.
+INFO     [2025-03-18 22:36:02,434]: MTMC result (244 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s01/mtmc_tracklets.pkl
+INFO     [2025-03-18 22:36:02,434]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-18 22:36:34,600]: All config checks passed.
+INFO     [2025-03-18 22:36:34,601]: All config checks passed.
+INFO     [2025-03-18 22:36:34,601]: All config checks passed.
+INFO     [2025-03-18 22:36:34,602]: All config checks passed.
+INFO     [2025-03-18 22:36:34,603]: All config checks passed.
+INFO     [2025-03-18 22:36:34,603]: All config checks passed.
+INFO     [2025-03-18 22:36:34,603]: All config checks passed.
+INFO     [2025-03-18 22:46:20,301]: 
+Tracking finished over 1955 frames, total time: 9 min 30 sec, average fps: 3.425.
+INFO     [2025-03-18 22:46:20,307]: MOT Benchmark (times in ms)
+name                   min     mean      max   
+------------------------------------------------
+detector             39.0613  44.239  1020.2751
+detection filter      0.2112  0.3993    3.1149 
+reid                 77.7442 233.0069  443.9888
+nonmax suppression    0.4492  0.8443   13.6228 
+attribute extraction  0.0019  0.0032    0.0441 
+tracker               1.1065  3.0717    7.4224 
+displays              0.1028  3.0404    7.8442 
+------------------------------------------------
+INFO     [2025-03-18 22:46:20,335]: Tracking done. #Tracklets: 107
+INFO     [2025-03-18 22:46:21,098]: All config checks passed.
+INFO     [2025-03-18 22:46:22,369]: Evaluation results:
+      IDF1   IDP   IDR  Rcll   Prcn GT MT PT ML FP  FN IDs  FM  MOTA    MOTP IDt IDa IDm  idfp   idfn    idtp
+MTMC 94.5% 96.6% 92.5% 95.7% 100.0% 77 74  1  2  0 126  42   8 94.3% 100.00%  39   6   4  96.0  222.0  2724.0
+
+INFO     [2025-03-18 22:46:22,389]: All config checks passed.
+INFO     [2025-03-18 22:52:18,082]: All config checks passed.
+INFO     [2025-03-18 22:52:18,083]: All config checks passed.
+INFO     [2025-03-18 22:52:18,084]: All config checks passed.
+INFO     [2025-03-18 22:52:18,084]: All config checks passed.
+INFO     [2025-03-18 22:52:18,085]: All config checks passed.
+INFO     [2025-03-18 22:52:18,085]: All config checks passed.
+INFO     [2025-03-18 22:52:18,085]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-18 22:52:18,086]: All config checks passed.
+INFO     [2025-03-18 22:52:18,086]: Camera layout loaded with 5 cams.
+INFO     [2025-03-18 22:52:18,124]: Tracklets loaded for camera 0: 107 in total.
+INFO     [2025-03-18 22:52:18,156]: Tracklets loaded for camera 1: 100 in total.
+INFO     [2025-03-18 22:52:18,283]: Tracklets loaded for camera 2: 138 in total.
+INFO     [2025-03-18 22:52:18,322]: Tracklets loaded for camera 3: 106 in total.
+INFO     [2025-03-18 22:52:18,476]: Tracklets loaded for camera 4: 128 in total.
+INFO     [2025-03-18 22:52:18,478]: Starting clustering of 579 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-18 22:52:20,900]: Precomputation finished, took 2.421 s.
+INFO     [2025-03-18 22:52:21,556]: mtmc clustering took 3.078 seconds: 244 final tracks.
+INFO     [2025-03-18 22:52:22,046]: MTMC result (244 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s01/mtmc_tracklets.pkl
+INFO     [2025-03-18 22:52:22,046]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-18 22:52:54,674]: All config checks passed.
+INFO     [2025-03-18 22:52:54,675]: All config checks passed.
+INFO     [2025-03-18 22:52:54,675]: All config checks passed.
+INFO     [2025-03-18 22:52:54,676]: All config checks passed.
+INFO     [2025-03-18 22:52:54,677]: All config checks passed.
+INFO     [2025-03-18 22:52:54,677]: All config checks passed.
+INFO     [2025-03-18 22:52:54,677]: All config checks passed.
+INFO     [2025-03-18 22:53:42,774]: All config checks passed.
+INFO     [2025-03-18 22:53:42,774]: All config checks passed.
+INFO     [2025-03-18 22:53:42,775]: All config checks passed.
+INFO     [2025-03-18 22:53:42,776]: All config checks passed.
+INFO     [2025-03-18 22:53:42,776]: All config checks passed.
+INFO     [2025-03-18 22:53:42,777]: All config checks passed.
+INFO     [2025-03-18 22:53:42,777]: All config checks passed.
+INFO     [2025-03-18 22:56:46,099]: All config checks passed.
+INFO     [2025-03-18 22:56:46,100]: All config checks passed.
+INFO     [2025-03-18 22:56:46,100]: All config checks passed.
+INFO     [2025-03-18 22:56:46,101]: All config checks passed.
+INFO     [2025-03-18 22:56:46,102]: All config checks passed.
+INFO     [2025-03-18 22:56:46,102]: All config checks passed.
+INFO     [2025-03-18 22:56:46,102]: All config checks passed.
+INFO     [2025-03-18 22:57:29,869]: All config checks passed.
+INFO     [2025-03-18 22:57:29,870]: All config checks passed.
+INFO     [2025-03-18 22:57:29,871]: All config checks passed.
+INFO     [2025-03-18 22:57:29,872]: All config checks passed.
+INFO     [2025-03-18 22:57:29,872]: All config checks passed.
+INFO     [2025-03-18 22:57:29,873]: All config checks passed.
+INFO     [2025-03-18 22:57:29,873]: All config checks passed.
+INFO     [2025-03-18 22:58:08,815]: All config checks passed.
+INFO     [2025-03-18 22:58:08,816]: All config checks passed.
+INFO     [2025-03-18 22:58:08,817]: All config checks passed.
+INFO     [2025-03-18 22:58:08,817]: All config checks passed.
+INFO     [2025-03-18 22:58:08,818]: All config checks passed.
+INFO     [2025-03-18 22:58:08,819]: All config checks passed.
+INFO     [2025-03-18 22:58:08,819]: All config checks passed.
+INFO     [2025-03-18 22:58:57,087]: All config checks passed.
+INFO     [2025-03-18 22:58:57,088]: All config checks passed.
+INFO     [2025-03-18 22:58:57,088]: All config checks passed.
+INFO     [2025-03-18 22:58:57,089]: All config checks passed.
+INFO     [2025-03-18 22:58:57,090]: All config checks passed.
+INFO     [2025-03-18 22:58:57,090]: All config checks passed.
+INFO     [2025-03-18 22:58:57,090]: All config checks passed.

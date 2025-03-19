@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 import matplotlib.pyplot as plt
 import imageio
 import argparse
+from tqdm import tqdm 
 
 try:
     import cv2
@@ -124,13 +125,13 @@ def annotate_video_with_tracklets(input_path, output_path, tracklets, font="Hack
     video_in = imageio.get_reader(input_path)
     video_meta = video_in.get_meta_data()
     video_out = FileVideo(
-        font, output_path, video_meta["fps"], video_meta["codec"], fontsize=fontsize)
+        font, output_path, video_meta["fps"], "libx264", fontsize=fontsize)#video_meta["codec"]
 
     tracklets = sorted(tracklets, key=lambda tr: tr.frames[0])
     active_tracks = {}
     nxt_track = 0
 
-    for frame_idx, frame in enumerate(video_in):
+    for frame_idx, frame in tqdm(enumerate(video_in)):
         while nxt_track < len(tracklets) and tracklets[nxt_track].frames[0] == frame_idx:
             active_tracks[nxt_track] = 0
             nxt_track += 1

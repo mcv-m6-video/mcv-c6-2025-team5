@@ -16,7 +16,7 @@ from tools import log
 MTMC_OUTPUT_NAME = "mtmc"
 
 
-def run_express_mtmc(cfg: CfgNode):
+def run_express_mtmc(cfg: CfgNode, run_mot: bool, save_video: bool):
     """Run Express MTMC on a given config."""
     if not check_express_config(cfg):
         return None
@@ -45,9 +45,10 @@ def run_express_mtmc(cfg: CfgNode):
                 f"Error in the express config of camera {len(mot_configs) - 1}.")
             return None
 
-    # # run MOT in all cameras
-    # for mot_conf in mot_configs:
-    #     run_mot(mot_conf)
+    # run MOT in all cameras
+    if run_mot:
+        for mot_conf in mot_configs:
+            run_mot(mot_conf)
 
     log.info("Express: Running MOT on all cameras finished. Running MTMC...")
 
@@ -73,7 +74,7 @@ def run_express_mtmc(cfg: CfgNode):
     save_tracklets_txt_per_cam(mtracks, final_txt_paths)
     save_tracklets_csv_per_cam(mtracks, final_csv_paths)
 
-    if cfg.EXPRESS.FINAL_VIDEO_OUTPUT:
+    if cfg.EXPRESS.FINAL_VIDEO_OUTPUT and save_video:
         for i, cam_dir in enumerate(cam_dirs):
             video_in = mot_configs[i].MOT.VIDEO
             video_ext = "mp4"#video_in.split(".")[1]
@@ -125,4 +126,4 @@ if __name__ == "__main__":
 
     log.log_init(os.path.join(cfg.OUTPUT_DIR, args.log_filename),
                  args.log_level, not args.no_log_stdout)
-    run_express_mtmc(cfg)
+    run_express_mtmc(cfg, args.run_mot, args.save_video)

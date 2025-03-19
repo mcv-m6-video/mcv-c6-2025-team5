@@ -45,10 +45,11 @@ EVAL:
   IGNORE_FP: true
   DROP_SINGLE_CAM: true
   GROUND_TRUTHS:
-    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c001/gt/gt.txt"
-    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c002/gt/gt.txt"
-    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c003/gt/gt.txt"
-    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c004/gt/gt.txt"
-    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c005/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c010/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c011/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c012/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c013/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c014/gt/gt.txt"
+    - "/home/msiau/data/tmp/ptruong/data/aic19-track1-mtmc-train/train/S03/c015/gt/gt.txt"
 
     

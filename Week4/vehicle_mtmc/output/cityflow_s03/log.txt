@@ -141,3 +141,179 @@ INFO     [2025-03-18 20:03:23,296]: Precomputation finished, took 2.162 s.
 INFO     [2025-03-18 20:03:23,806]: mtmc clustering took 2.673 seconds: 176 final tracks.
 INFO     [2025-03-18 20:03:24,736]: MTMC result (176 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03/mtmc_tracklets.pkl
 INFO     [2025-03-18 20:03:24,737]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-18 22:05:14,082]: All config checks passed.
+INFO     [2025-03-18 22:05:14,083]: All config checks passed.
+INFO     [2025-03-18 22:05:14,083]: All config checks passed.
+INFO     [2025-03-18 22:05:14,084]: All config checks passed.
+INFO     [2025-03-18 22:05:14,085]: All config checks passed.
+INFO     [2025-03-18 22:05:14,085]: All config checks passed.
+INFO     [2025-03-18 22:05:14,086]: All config checks passed.
+INFO     [2025-03-18 22:05:14,086]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-18 22:05:14,087]: All config checks passed.
+INFO     [2025-03-18 22:05:14,137]: Tracklets loaded for camera 0: 96 in total.
+INFO     [2025-03-18 22:05:14,292]: Tracklets loaded for camera 1: 50 in total.
+INFO     [2025-03-18 22:05:14,328]: Tracklets loaded for camera 2: 36 in total.
+INFO     [2025-03-18 22:05:14,339]: Tracklets loaded for camera 3: 24 in total.
+INFO     [2025-03-18 22:05:14,484]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-18 22:05:14,556]: Tracklets loaded for camera 5: 28 in total.
+INFO     [2025-03-18 22:05:14,557]: Starting clustering of 283 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-18 22:05:16,736]: Precomputation finished, took 2.179 s.
+INFO     [2025-03-18 22:05:17,223]: mtmc clustering took 2.666 seconds: 176 final tracks.
+INFO     [2025-03-18 22:05:17,959]: MTMC result (176 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03/mtmc_tracklets.pkl
+INFO     [2025-03-18 22:05:17,959]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-18 22:07:58,175]: All config checks passed.
+INFO     [2025-03-18 22:07:58,175]: All config checks passed.
+INFO     [2025-03-18 22:07:58,176]: All config checks passed.
+INFO     [2025-03-18 22:07:58,177]: All config checks passed.
+INFO     [2025-03-18 22:07:58,177]: All config checks passed.
+INFO     [2025-03-18 22:07:58,178]: All config checks passed.
+INFO     [2025-03-18 22:07:58,179]: All config checks passed.
+INFO     [2025-03-18 22:07:58,179]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-18 22:07:58,179]: All config checks passed.
+INFO     [2025-03-18 22:07:58,229]: Tracklets loaded for camera 0: 96 in total.
+INFO     [2025-03-18 22:07:58,406]: Tracklets loaded for camera 1: 50 in total.
+INFO     [2025-03-18 22:07:58,440]: Tracklets loaded for camera 2: 36 in total.
+INFO     [2025-03-18 22:07:58,452]: Tracklets loaded for camera 3: 24 in total.
+INFO     [2025-03-18 22:07:58,622]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-18 22:07:58,694]: Tracklets loaded for camera 5: 28 in total.
+INFO     [2025-03-18 22:07:58,695]: Starting clustering of 283 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-18 22:08:00,886]: Precomputation finished, took 2.191 s.
+INFO     [2025-03-18 22:08:01,373]: mtmc clustering took 2.679 seconds: 176 final tracks.
+INFO     [2025-03-18 22:08:02,185]: MTMC result (176 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03/mtmc_tracklets.pkl
+INFO     [2025-03-18 22:08:02,185]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-18 22:08:17,126]: All config checks passed.
+INFO     [2025-03-18 22:08:17,127]: All config checks passed.
+INFO     [2025-03-18 22:08:17,127]: All config checks passed.
+INFO     [2025-03-18 22:08:17,128]: All config checks passed.
+INFO     [2025-03-18 22:08:17,129]: All config checks passed.
+INFO     [2025-03-18 22:08:17,129]: All config checks passed.
+INFO     [2025-03-18 22:08:17,130]: All config checks passed.
+INFO     [2025-03-18 22:08:17,130]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-18 22:08:17,131]: All config checks passed.
+INFO     [2025-03-18 22:08:17,180]: Tracklets loaded for camera 0: 96 in total.
+INFO     [2025-03-18 22:08:17,332]: Tracklets loaded for camera 1: 50 in total.
+INFO     [2025-03-18 22:08:17,367]: Tracklets loaded for camera 2: 36 in total.
+INFO     [2025-03-18 22:08:17,378]: Tracklets loaded for camera 3: 24 in total.
+INFO     [2025-03-18 22:08:17,524]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-18 22:08:17,595]: Tracklets loaded for camera 5: 28 in total.
+INFO     [2025-03-18 22:08:17,596]: Starting clustering of 283 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-18 22:08:19,755]: Precomputation finished, took 2.160 s.
+INFO     [2025-03-18 22:08:20,239]: mtmc clustering took 2.644 seconds: 176 final tracks.
+INFO     [2025-03-18 22:08:20,988]: MTMC result (176 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03/mtmc_tracklets.pkl
+INFO     [2025-03-18 22:08:20,988]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-18 22:13:22,237]: All config checks passed.
+INFO     [2025-03-18 22:13:22,238]: All config checks passed.
+INFO     [2025-03-18 22:13:22,239]: All config checks passed.
+INFO     [2025-03-18 22:13:22,239]: All config checks passed.
+INFO     [2025-03-18 22:13:22,240]: All config checks passed.
+INFO     [2025-03-18 22:13:22,241]: All config checks passed.
+INFO     [2025-03-18 22:13:22,241]: All config checks passed.
+INFO     [2025-03-18 22:13:22,241]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-18 22:13:22,242]: All config checks passed.
+INFO     [2025-03-18 22:13:22,291]: Tracklets loaded for camera 0: 96 in total.
+INFO     [2025-03-18 22:13:22,444]: Tracklets loaded for camera 1: 50 in total.
+INFO     [2025-03-18 22:13:22,479]: Tracklets loaded for camera 2: 36 in total.
+INFO     [2025-03-18 22:13:22,491]: Tracklets loaded for camera 3: 24 in total.
+INFO     [2025-03-18 22:13:22,636]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-18 22:13:22,708]: Tracklets loaded for camera 5: 28 in total.
+INFO     [2025-03-18 22:13:22,708]: Starting clustering of 283 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-18 22:13:24,852]: Precomputation finished, took 2.143 s.
+INFO     [2025-03-18 22:13:25,328]: mtmc clustering took 2.62 seconds: 176 final tracks.
+INFO     [2025-03-18 22:13:26,079]: MTMC result (176 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03/mtmc_tracklets.pkl
+INFO     [2025-03-18 22:13:26,079]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-18 22:14:32,067]: All config checks passed.
+INFO     [2025-03-18 22:14:32,068]: All config checks passed.
+INFO     [2025-03-18 22:14:32,069]: All config checks passed.
+INFO     [2025-03-18 22:14:32,069]: All config checks passed.
+INFO     [2025-03-18 22:14:32,070]: All config checks passed.
+INFO     [2025-03-18 22:14:32,071]: All config checks passed.
+INFO     [2025-03-18 22:14:32,071]: All config checks passed.
+INFO     [2025-03-18 22:14:32,071]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-18 22:14:32,072]: All config checks passed.
+INFO     [2025-03-18 22:14:32,122]: Tracklets loaded for camera 0: 96 in total.
+INFO     [2025-03-18 22:14:32,306]: Tracklets loaded for camera 1: 50 in total.
+INFO     [2025-03-18 22:14:32,341]: Tracklets loaded for camera 2: 36 in total.
+INFO     [2025-03-18 22:14:32,352]: Tracklets loaded for camera 3: 24 in total.
+INFO     [2025-03-18 22:14:32,523]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-18 22:14:32,596]: Tracklets loaded for camera 5: 28 in total.
+INFO     [2025-03-18 22:14:32,597]: Starting clustering of 283 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-18 22:14:34,765]: Precomputation finished, took 2.168 s.
+INFO     [2025-03-18 22:14:35,244]: mtmc clustering took 2.647 seconds: 176 final tracks.
+INFO     [2025-03-18 22:14:36,051]: MTMC result (176 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03/mtmc_tracklets.pkl
+INFO     [2025-03-18 22:14:36,052]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-18 22:24:12,087]: Express: video 0 saved.
+INFO     [2025-03-18 22:41:40,018]: All config checks passed.
+INFO     [2025-03-18 22:41:40,019]: All config checks passed.
+INFO     [2025-03-18 22:41:40,020]: All config checks passed.
+INFO     [2025-03-18 22:41:40,020]: All config checks passed.
+INFO     [2025-03-18 22:41:40,021]: All config checks passed.
+INFO     [2025-03-18 22:41:40,022]: All config checks passed.
+INFO     [2025-03-18 22:41:40,023]: All config checks passed.
+INFO     [2025-03-18 22:41:40,023]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-18 22:41:40,023]: All config checks passed.
+INFO     [2025-03-18 22:41:40,080]: Tracklets loaded for camera 0: 96 in total.
+INFO     [2025-03-18 22:41:40,247]: Tracklets loaded for camera 1: 50 in total.
+INFO     [2025-03-18 22:41:40,287]: Tracklets loaded for camera 2: 36 in total.
+INFO     [2025-03-18 22:41:40,301]: Tracklets loaded for camera 3: 24 in total.
+INFO     [2025-03-18 22:41:40,460]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-18 22:41:40,545]: Tracklets loaded for camera 5: 28 in total.
+INFO     [2025-03-18 22:41:40,546]: Starting clustering of 283 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-18 22:41:42,860]: Precomputation finished, took 2.314 s.
+INFO     [2025-03-18 22:41:43,426]: mtmc clustering took 2.88 seconds: 176 final tracks.
+INFO     [2025-03-18 22:41:44,250]: MTMC result (176 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03/mtmc_tracklets.pkl
+INFO     [2025-03-18 22:41:44,250]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-18 22:52:31,360]: Express: video 0 saved.
+INFO     [2025-03-18 23:10:01,845]: Express: video 1 saved.
+INFO     [2025-03-18 23:20:37,976]: Express: video 2 saved.
+INFO     [2025-03-18 23:28:04,769]: Express: video 3 saved.
+INFO     [2025-03-18 23:39:23,278]: Express: video 4 saved.
+INFO     [2025-03-18 23:53:12,068]: Express: video 5 saved.
+INFO     [2025-03-18 23:53:12,070]: Ground truth annotations are provided, trying to evaluate MTMC ...
+ERROR    [2025-03-18 23:53:12,070]: Number of ground truth files != number of cameras, aborting evaluation ...
+INFO     [2025-03-19 09:04:53,104]: All config checks passed.
+INFO     [2025-03-19 09:04:53,105]: All config checks passed.
+INFO     [2025-03-19 09:04:53,106]: All config checks passed.
+INFO     [2025-03-19 09:04:53,106]: All config checks passed.
+INFO     [2025-03-19 09:04:53,107]: All config checks passed.
+INFO     [2025-03-19 09:04:53,107]: All config checks passed.
+INFO     [2025-03-19 09:04:53,108]: All config checks passed.
+INFO     [2025-03-19 09:04:53,108]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-19 09:04:53,109]: All config checks passed.
+INFO     [2025-03-19 09:04:53,158]: Tracklets loaded for camera 0: 96 in total.
+INFO     [2025-03-19 09:04:53,336]: Tracklets loaded for camera 1: 50 in total.
+INFO     [2025-03-19 09:04:53,371]: Tracklets loaded for camera 2: 36 in total.
+INFO     [2025-03-19 09:04:53,382]: Tracklets loaded for camera 3: 24 in total.
+INFO     [2025-03-19 09:04:53,553]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-19 09:04:53,626]: Tracklets loaded for camera 5: 28 in total.
+INFO     [2025-03-19 09:04:53,626]: Starting clustering of 283 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-19 09:04:55,788]: Precomputation finished, took 2.162 s.
+INFO     [2025-03-19 09:04:56,282]: mtmc clustering took 2.656 seconds: 176 final tracks.
+INFO     [2025-03-19 09:04:57,080]: MTMC result (176 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03/mtmc_tracklets.pkl
+INFO     [2025-03-19 09:04:57,080]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-19 09:05:15,078]: All config checks passed.
+INFO     [2025-03-19 09:05:15,079]: All config checks passed.
+INFO     [2025-03-19 09:05:15,080]: All config checks passed.
+INFO     [2025-03-19 09:05:15,081]: All config checks passed.
+INFO     [2025-03-19 09:05:15,081]: All config checks passed.
+INFO     [2025-03-19 09:05:15,082]: All config checks passed.
+INFO     [2025-03-19 09:05:15,082]: All config checks passed.
+INFO     [2025-03-19 09:05:15,083]: Express: Running MOT on all cameras finished. Running MTMC...
+INFO     [2025-03-19 09:05:15,083]: All config checks passed.
+INFO     [2025-03-19 09:05:15,133]: Tracklets loaded for camera 0: 96 in total.
+INFO     [2025-03-19 09:05:15,290]: Tracklets loaded for camera 1: 50 in total.
+INFO     [2025-03-19 09:05:15,326]: Tracklets loaded for camera 2: 36 in total.
+INFO     [2025-03-19 09:05:15,337]: Tracklets loaded for camera 3: 24 in total.
+INFO     [2025-03-19 09:05:15,484]: Tracklets loaded for camera 4: 49 in total.
+INFO     [2025-03-19 09:05:15,559]: Tracklets loaded for camera 5: 28 in total.
+INFO     [2025-03-19 09:05:15,559]: Starting clustering of 283 tracks, precomputing compatibility and similarity matrices ...
+INFO     [2025-03-19 09:05:17,741]: Precomputation finished, took 2.181 s.
+INFO     [2025-03-19 09:05:18,235]: mtmc clustering took 2.675 seconds: 176 final tracks.
+INFO     [2025-03-19 09:05:18,978]: MTMC result (176 tracks) saved to: /home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/output/cityflow_s03/mtmc_tracklets.pkl
+INFO     [2025-03-19 09:05:18,978]: Express: Running MTMC on all cameras finished. Saving final results ...
+INFO     [2025-03-19 09:05:22,347]: Ground truth annotations are provided, trying to evaluate MTMC ...
+INFO     [2025-03-19 09:05:22,348]: All config checks passed.
+INFO     [2025-03-19 09:05:27,093]: Evaluation results:
+      IDF1   IDP   IDR  Rcll   Prcn GT MT PT ML FP   FN IDs  FM  MOTA    MOTP IDt IDa IDm   idfp    idfn    idtp
+MTMC 58.2% 87.5% 43.6% 49.8% 100.0% 18  2 15  1  0 3101  10  17 49.6% 100.00%   4   4   1  384.0  3485.0  2689.0
+
+INFO     [2025-03-19 09:05:27,093]: Evaluation successful.

@@ -11,9 +11,7 @@ MOT:
   MIN_FRAMES: 5
   SHOW: false
   VIDEO_OUTPUT: false
-  STATIC_ATTRIBUTES:
-    - color: "/home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/model/color_svm.pkl"
-    - type: "/home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/model/type_svm.pkl"
+  # STATIC_ATTRIBUTES:
   REFINE: false
 MTMC:
   CAMERA_LAYOUT: '/home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/config/cityflow/s01_camera_layout.txt'
