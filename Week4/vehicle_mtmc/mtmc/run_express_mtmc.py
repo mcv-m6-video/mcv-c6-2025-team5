@@ -16,7 +16,7 @@ from tools import log
 MTMC_OUTPUT_NAME = "mtmc"
 
 
-def run_express_mtmc(cfg: CfgNode, run_mot: bool, save_video: bool):
+def run_express_mtmc(cfg: CfgNode, mot: bool, save_video: bool):
     """Run Express MTMC on a given config."""
     if not check_express_config(cfg):
         return None
@@ -46,7 +46,7 @@ def run_express_mtmc(cfg: CfgNode, run_mot: bool, save_video: bool):
             return None
 
     # run MOT in all cameras
-    if run_mot:
+    if mot:
         for mot_conf in mot_configs:
             run_mot(mot_conf)
 
@@ -60,7 +60,7 @@ def run_express_mtmc(cfg: CfgNode, run_mot: bool, save_video: bool):
     mtmc_cfg.MTMC.PICKLED_TRACKLETS = pickle_paths
     mtmc_cfg.freeze()
     mtracks = run_mtmc(mtmc_cfg)
-
+    
     log.info("Express: Running MTMC on all cameras finished. Saving final results ...")
 
     # save single cam tracks
@@ -126,4 +126,4 @@ if __name__ == "__main__":
 
     log.log_init(os.path.join(cfg.OUTPUT_DIR, args.log_filename),
                  args.log_level, not args.no_log_stdout)
-    run_express_mtmc(cfg, args.run_mot, args.save_video)
+    run_express_mtmc(cfg, args.mot, args.save_video)

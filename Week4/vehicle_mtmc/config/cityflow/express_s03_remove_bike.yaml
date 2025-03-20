@@ -19,8 +19,8 @@ MOT:
   REFINE: false
 MTMC:
   CAMERA_LAYOUT: 
-  LINKAGE: 'average'
-  MIN_SIM: 0.5
+  LINKAGE: 'mean_feature'
+  MIN_SIM: 0.2
 EXPRESS:
   FINAL_VIDEO_OUTPUT: true
   CAMERAS:

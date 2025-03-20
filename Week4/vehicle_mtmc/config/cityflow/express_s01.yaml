@@ -14,7 +14,7 @@ MOT:
   # STATIC_ATTRIBUTES:
   REFINE: false
 MTMC:
-  CAMERA_LAYOUT: '/home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/config/cityflow/s01_camera_layout.txt'
+  CAMERA_LAYOUT: #'/home/msiau/workspace/.mcv/mcv-c6-2025-team5/Week4/vehicle_mtmc/config/cityflow/s01_camera_layout.txt'
   LINKAGE: 'average'
   MIN_SIM: 0.5
 EXPRESS:

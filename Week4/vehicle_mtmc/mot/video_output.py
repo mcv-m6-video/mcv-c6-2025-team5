@@ -18,35 +18,38 @@ from tools import log
 
 def put_text(img_pil, text, x, y, color, font):
     draw = ImageDraw.Draw(img_pil)
-    draw.text((x, y), text, (color[0], color[1], color[2],
-                             255), font=font)
+    draw.text((x, y), text, (color[0], color[1], color[2], 255), font=font)
     return img_pil
 
 
-def annotate(img_pil, id_label, attributes, tx, ty, bx, by, color, font):
-    """ Put the id label and the features as text below or above of a bounding box. """
-
+def annotate(img_pil, id_label, attributes, tx, ty, bx, by, color, font, is_gt=False):
+    """Put the id label and features as text below (predicted) or above (GT) a bounding box."""
     draw = ImageDraw.Draw(img_pil, "RGBA")
     draw.rectangle([tx, ty, bx, by], outline=color, width=3)
-    text = [id_label] + [f"{k}: {get_attribute_value(k, v)}" for k,
-                         v in attributes.items()]
-    text = "\n".join(text)
+    
+    # GT: Only show "GT-ID" label; Predicted: Show ID + attributes
+    if is_gt:
+        text = f"GT-{id_label}"
+    else:
+        text = [id_label] + [f"{k}: {get_attribute_value(k, v)}" for k, v in attributes.items()]
+        text = "\n".join(text)
 
     textcoords = draw.multiline_textbbox((tx, by), text, font=font)
-
-    # if the annotation below the box stretches out of the image, put it above
-    if textcoords[3] >= img_pil.size[1]:
-        txt_y = ty - (textcoords[3] - textcoords[1]) - 4
+    
+    # Position: GT above, Predicted below (or above if out of bounds)
+    if is_gt:
+        txt_y = ty - (textcoords[3] - textcoords[1]) - 4  # Above the box
+    elif textcoords[3] >= img_pil.size[1]:
+        txt_y = ty - (textcoords[3] - textcoords[1]) - 4  # Above if below exceeds image
     else:
-        txt_y = by
+        txt_y = by  # Below the box
 
-    # draw rectangle in the background
+    # Background rectangle
     coords = draw.multiline_textbbox((tx, txt_y), text, font=font)
-    # add some padding
     textcoords = (coords[0] - 2, coords[1] - 2, coords[2] + 2, coords[3] + 2)
     draw.rectangle(textcoords, fill=color)
 
-    # draw the text finally
+    # Draw text
     draw.multiline_text((tx, txt_y), text, (0, 0, 0), font=font)
     return img_pil
 
@@ -68,24 +71,31 @@ class Video:
         self.frame_font = ImageFont.truetype(font, 18)
         self.frame_num = 0
 
-    def render_tracks(self, frame, track_ids, track_bboxes, attributes):
+    def render_tracks(self, frame, pred_track_ids, pred_bboxes, pred_attributes, gt_track_ids, gt_bboxes):
         overlay = Image.fromarray(
             np.zeros((frame.shape[0], frame.shape[1], 4), dtype=np.uint8), "RGBA")
-        for track_id, bbox, attrib in zip(track_ids, track_bboxes, attributes):
+        
+        # Draw predicted tracklets (ID below)
+        for track_id, bbox, attrib in zip(pred_track_ids, pred_bboxes, pred_attributes):
             tx, ty, w, h = bbox
             bx, by = int(tx + w), int(ty + h)
             color = self.colors[(self.HASH_Q * int(track_id)) % len(self.colors)]
             color = tuple(int(i * 255) for i in color)
+            overlay = annotate(overlay, str(track_id), attrib, tx, ty, bx, by, color, self.font, is_gt=False)
 
-            overlay = annotate(overlay, str(track_id), attrib,
-                               tx, ty, bx, by, color, self.font)
+        # Draw GT tracklets (ID above as "GT-ID")
+        for track_id, bbox in zip(gt_track_ids, gt_bboxes):
+            tx, ty, w, h = bbox
+            bx, by = int(tx + w), int(ty + h)
+            color = self.colors[(self.HASH_Q * int(track_id)) % len(self.colors)]
+            color = tuple(int(i * 255) for i in color)
+            overlay = annotate(overlay, str(track_id), {}, tx, ty, bx, by, color, self.font, is_gt=True)
 
         mask = Image.fromarray((np.array(overlay) > 0).astype(np.uint8) * 192)
         frame_img = Image.fromarray(frame)
         frame_img.paste(overlay, mask=mask)
 
-        put_text(frame_img, f"Frame {self.frame_num}",
-                 0, 0, (255, 0, 0), self.frame_font)
+        put_text(frame_img, f"Frame {self.frame_num}", 0, 0, (255, 0, 0), self.frame_font)
         self.frame_num += 1
 
         return np.array(frame_img)
@@ -112,20 +122,41 @@ class FileVideo(Video):
         self.video = imageio.get_writer(save_path, format=format, mode=mode,
                                         fps=fps, codec=codec, macro_block_size=8)
 
-    def update(self, frame, track_ids, bboxes, attributes):
-        frame = self.render_tracks(frame, track_ids, bboxes, attributes)
+    def update(self, frame, pred_track_ids, pred_bboxes, pred_attributes, gt_track_ids, gt_bboxes):
+        frame = self.render_tracks(frame, pred_track_ids, pred_bboxes, pred_attributes, gt_track_ids, gt_bboxes)
         self.video.append_data(frame)
 
     def close(self):
         self.video.close()
 
 
-def annotate_video_with_tracklets(input_path, output_path, tracklets, font="Hack-Regular.ttf",
-                                  fontsize=13):
+def get_gt_path(input_path):
+    return input_path.replace("vdo.avi", "gt/gt.txt")
+
+
+def load_gt_data(gt_path):
+    """Load ground truth data from gt.txt into a dictionary by frame."""
+    gt_data = {}
+    with open(gt_path, 'r') as f:
+        for line in f:
+            parts = list(map(int, line.strip().split(',')))
+            frame_id, track_id, left, top, width, height = parts[:6]
+            # Adjust frame_id to 0-indexed (MOT is 1-indexed)
+            frame_id -= 1
+            if frame_id not in gt_data:
+                gt_data[frame_id] = []
+            gt_data[frame_id].append((track_id, (left, top, width, height)))
+    return gt_data
+
+
+def annotate_video_with_tracklets(input_path, output_path, tracklets, font="Hack-Regular.ttf", fontsize=13):
     video_in = imageio.get_reader(input_path)
+    gt_path = get_gt_path(input_path)
     video_meta = video_in.get_meta_data()
-    video_out = FileVideo(
-        font, output_path, video_meta["fps"], "libx264", fontsize=fontsize)#video_meta["codec"]
+    video_out = FileVideo(font, output_path, video_meta["fps"], "libx264", fontsize=fontsize)
+
+    # Load ground truth data
+    gt_data = load_gt_data(gt_path)
 
     tracklets = sorted(tracklets, key=lambda tr: tr.frames[0])
     active_tracks = {}
@@ -136,24 +167,21 @@ def annotate_video_with_tracklets(input_path, output_path, tracklets, font="Hack
             active_tracks[nxt_track] = 0
             nxt_track += 1
 
-        track_ids, bboxes, attribs = [], [], []
+        pred_track_ids, pred_bboxes, pred_attribs = [], [], []
         ended_tracks = []
         incr_tracks = []
 
-        # gather info for the current frame
+        # Gather predicted tracklet info for the current frame
         for track_idx, ptr in active_tracks.items():
             track = tracklets[track_idx]
-
             try:
-                static_refined = isinstance(
-                    next(iter(track.static_attributes.values())), int)
+                static_refined = isinstance(next(iter(track.static_attributes.values())), int)
             except StopIteration:
                 static_refined = True
 
             if track.frames[ptr] == frame_idx:
-                track_ids.append(track.track_id)
-                bboxes.append(track.bboxes[ptr])
-
+                pred_track_ids.append(track.track_id)
+                pred_bboxes.append(track.bboxes[ptr])
                 attr = {}
                 for k, v in track.static_attributes.items():
                     if static_refined:
@@ -162,7 +190,7 @@ def annotate_video_with_tracklets(input_path, output_path, tracklets, font="Hack
                         attr[k] = v[ptr]
                 for k, v in track.dynamic_attributes.items():
                     attr[k] = v[ptr]
-                attribs.append(attr)
+                pred_attribs.append(attr)
 
                 if ptr >= len(track.frames) - 1:
                     ended_tracks.append(track_idx)
@@ -174,22 +202,26 @@ def annotate_video_with_tracklets(input_path, output_path, tracklets, font="Hack
         for track_idx in incr_tracks:
             active_tracks[track_idx] += 1
 
-        video_out.update(frame, track_ids, bboxes, attribs)
+        # Gather GT info for the current frame
+        gt_track_ids, gt_bboxes = [], []
+        if frame_idx in gt_data:
+            for track_id, bbox in gt_data[frame_idx]:
+                gt_track_ids.append(track_id)
+                gt_bboxes.append(bbox)
+
+        # Update video with both predicted and GT annotations
+        video_out.update(frame, pred_track_ids, pred_bboxes, pred_attribs, gt_track_ids, gt_bboxes)
 
     video_out.close()
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="annotate video with tracklets")
+    parser = argparse.ArgumentParser(description="annotate video with tracklets")
     parser.add_argument("input_video", help="video to annotate")
     parser.add_argument("output_video", help="video output path")
-    parser.add_argument(
-        "tracklets", help="pickle file containing the tracklets")
-    parser.add_argument("--fontsize", default=13, type=int,
-                        help="font size for the annotation")
+    parser.add_argument("tracklets", help="pickle file containing the tracklets")
+    parser.add_argument("--fontsize", default=13, type=int, help="font size for the annotation")
     args = parser.parse_args()
 
     tracklets = load_tracklets(args.tracklets)
-    annotate_video_with_tracklets(args.input_video, args.output_video, tracklets,
-                                  fontsize=args.fontsize)
+    annotate_video_with_tracklets(args.input_video, args.output_video, tracklets, fontsize=args.fontsize)

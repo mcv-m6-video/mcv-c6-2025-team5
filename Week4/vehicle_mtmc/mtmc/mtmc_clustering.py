@@ -175,14 +175,30 @@ def mtmc_clustering(tracks: List[List[Tracklet]],
 
     # drop invalidated mtracks
     mtracks = [mtracks[i] for i in remaining_tracks]
+    filtered_mtracks = []
+    only1cam_count = 0
+    staticcar_count = 0
+    for mtrack in mtracks:
+        # Check if the tracklet has more than one track
+        avg_speed = 0
+        if len(mtrack.tracks) > 1:
+            for track in mtrack.tracks:
+                avg_speed += np.mean(track.dynamic_attributes['speed'])
+            if avg_speed > 10:
+                filtered_mtracks.append(mtrack)
+            else:
+                staticcar_count += 1
+        else:
+            only1cam_count += 1
+
+    log.info("Removed %s tracks with only one camera", only1cam_count)
 
     # reindex final tracks and finalize them
-    for i, mtrack in enumerate(mtracks):
+    for i, mtrack in enumerate(filtered_mtracks):
         mtrack.id = i
         mtrack.finalize()
-
     log_total_time = round(time.time() - log_start_time, 3)
     log.info(
-        "mtmc clustering took %s seconds: %s final tracks.", log_total_time, len(mtracks))
+        "mtmc clustering took %s seconds: %s final tracks.", log_total_time, len(filtered_mtracks))
 
-    return mtracks
+    return filtered_mtracks
