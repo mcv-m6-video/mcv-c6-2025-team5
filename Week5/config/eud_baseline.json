@@ -1,8 +1,8 @@
 {
-    "frame_dir": "C:/Users/EudaldVilanova/Documents/C6/mcv-c6-2025-team5/AICity_data/398x224",
-    "save_dir": "C:\\Users\\EudaldVilanova\\Downloads\\saved-Soccer",
-    "labels_dir": "C:\\Users\\EudaldVilanova\\Downloads\\Soccer",
-    "store_mode": "load",
+    "frame_dir": "~/SoccerNet/allVideos",
+    "save_dir": "~/Eudald/saved-Soccer",
+    "labels_dir": "~/SoccerNet/SN-BAS-2025",
+    "store_mode": "store",
     "task": "classification",
     "batch_size": 4,
     "clip_len": 50,
