@@ -22,7 +22,6 @@ from dataset.datasets import get_datasets
 from model.model_classification import Model
 from model.new_model_classification import NewModel
 
-from util.logger import setup_logger
 
 def get_args():
     #Basic arguments
@@ -52,13 +51,12 @@ def update_args(args, config):
     args.only_test = config['only_test']
     args.device = config['device']
     args.num_workers = config['num_workers']
-    args.loss = config['loss']
 
     return args
 
-def get_lr_scheduler(args, optimizer, num_steps_per_epoch, logger = setup_logger(log_file='log.log')):
+def get_lr_scheduler(args, optimizer, num_steps_per_epoch):
     cosine_epochs = args.num_epochs - args.warm_up_epochs
-    logger.info('Using Linear Warmup ({}) + Cosine Annealing LR ({})'.format(
+    print('Using Linear Warmup ({}) + Cosine Annealing LR ({})'.format(
         args.warm_up_epochs, cosine_epochs))
     return args.num_epochs, ChainedScheduler([
         LinearLR(optimizer, start_factor=0.01, end_factor=1.0,
@@ -66,7 +64,7 @@ def get_lr_scheduler(args, optimizer, num_steps_per_epoch, logger = setup_logger
         CosineAnnealingLR(optimizer,
             num_steps_per_epoch * cosine_epochs)])
 
-def eval_and_print(model, data, classes, logger):
+def eval_and_print(model, data, classes):
     ap_score = evaluate(model, data)
 
     # Report results per-class in table
@@ -75,19 +73,18 @@ def eval_and_print(model, data, classes, logger):
         table.append([class_name, f"{ap_score[i]*100:.2f}"])
 
     headers = ["Class", "Average Precision"]
-    logger.info(tabulate(table, headers, tablefmt="grid"))
+    print(tabulate(table, headers, tablefmt="grid"))
 
     # Report average results in table
     avg_table = [["Average", f"{np.mean(ap_score)*100:.2f}"]]
     headers = ["", "Average Precision"]
 
-    logger.info(tabulate(avg_table, headers, tablefmt="grid"))
+    print(tabulate(avg_table, headers, tablefmt="grid"))
     return ap_score
 
 def main(args):
-    logger = setup_logger(log_file='log.log')
     # Set seed
-    logger.info('Setting seed to: ', args.seed)
+    print('Setting seed to: ', args.seed)
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     random.seed(args.seed)
@@ -104,10 +101,10 @@ def main(args):
     classes, train_data, val_data, test_data = get_datasets(args)
 
     if args.store_mode == 'store':
-        logger.info('Datasets have been stored correctly! Re-run changing "mode" to "load" in the config JSON.')
+        print('Datasets have been stored correctly! Re-run changing "mode" to "load" in the config JSON.')
         sys.exit('Datasets have correctly been stored! Stop training here and rerun with load mode.')
     else:
-        logger.info('Datasets have been loaded from previous versions correctly!')
+        print('Datasets have been loaded from previous versions correctly!')
 
     def worker_init_fn(id):
         random.seed(id + epoch * 100)
@@ -128,8 +125,8 @@ def main(args):
     )
 
     # Model
-    model = Model(args=args)
-    # model = NewModel(args=args)
+    # model = Model(args=args)
+    model = NewModel(args=args)
 
     print("Finetune LR Factor", args.finetune_lr_factor)
     optimizer, scaler = model.get_optimizer({'lr': args.learning_rate}, finetune_lr_factor=args.finetune_lr_factor)
@@ -141,11 +138,10 @@ def main(args):
             args, optimizer, num_steps_per_epoch)
         
         losses = []
-        # best_criterion = float('inf')
-        best_ap = 0.0
+        best_criterion = float('inf')
         epoch = 0
 
-        logger.info('START TRAINING EPOCHS')
+        print('START TRAINING EPOCHS')
         for epoch in range(epoch, num_epochs):
 
             train_loss = model.epoch(
@@ -153,22 +149,19 @@ def main(args):
                 lr_scheduler=lr_scheduler)
             
             val_loss = model.epoch(val_loader)
+
+            better = False
+            if val_loss < best_criterion:
+                best_criterion = val_loss
+                better = True
             
             val_ap_score = eval_and_print(model, val_data, classes)
-            test_ap_score = eval_and_print(model, test_data, classes)
-            better = False
-            # if val_loss < best_criterion:
-            #     best_criterion = val_loss
-            #     better = True
-            if val_ap_score >= best_ap:
-                best_ap = val_ap_score
-                better = True
 
             #Printing info epoch
-            logger.info('[Epoch {}] Train loss: {:0.5f} Val loss: {:0.5f}'.format(
+            print('[Epoch {}] Train loss: {:0.5f} Val loss: {:0.5f}'.format(
                 epoch, train_loss, val_loss))
             if better:
-                logger.info('New best mAP epoch!')
+                print('New best mAP epoch!')
 
             losses.append({
                 'epoch': epoch, 'train': train_loss, 'val': val_loss
@@ -181,12 +174,12 @@ def main(args):
                 if better:
                     torch.save( model.state_dict(), os.path.join(ckpt_dir, 'checkpoint_best.pt') )
 
-    logger.info('START INFERENCE')
+    print('START INFERENCE')
     model.load(torch.load(os.path.join(ckpt_dir, 'checkpoint_best.pt')))
 
     test_ap_score = eval_and_print(model, test_data, classes)
     
-    logger.info('CORRECTLY FINISHED TRAINING AND INFERENCE')
+    print('CORRECTLY FINISHED TRAINING AND INFERENCE')
 
 
 if __name__ == '__main__':
