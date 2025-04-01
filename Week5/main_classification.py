@@ -64,6 +64,23 @@ def get_lr_scheduler(args, optimizer, num_steps_per_epoch):
         CosineAnnealingLR(optimizer,
             num_steps_per_epoch * cosine_epochs)])
 
+def eval_and_print(model, data, classes):
+    ap_score = evaluate(model, data)
+
+    # Report results per-class in table
+    table = []
+    for i, class_name in enumerate(classes.keys()):
+        table.append([class_name, f"{ap_score[i]*100:.2f}"])
+
+    headers = ["Class", "Average Precision"]
+    print(tabulate(table, headers, tablefmt="grid"))
+
+    # Report average results in table
+    avg_table = [["Average", f"{np.mean(ap_score)*100:.2f}"]]
+    headers = ["", "Average Precision"]
+
+    print(tabulate(avg_table, headers, tablefmt="grid"))
+    return ap_score
 
 def main(args):
     # Set seed
@@ -137,6 +154,8 @@ def main(args):
                 best_criterion = val_loss
                 better = True
             
+            val_ap_score = eval_and_print(model, val_data, classes)
+
             #Printing info epoch
             print('[Epoch {}] Train loss: {:0.5f} Val loss: {:0.5f}'.format(
                 epoch, train_loss, val_loss))
@@ -157,22 +176,7 @@ def main(args):
     print('START INFERENCE')
     model.load(torch.load(os.path.join(ckpt_dir, 'checkpoint_best.pt')))
 
-    # Evaluation on test split
-    ap_score = evaluate(model, test_data)
-
-    # Report results per-class in table
-    table = []
-    for i, class_name in enumerate(classes.keys()):
-        table.append([class_name, f"{ap_score[i]*100:.2f}"])
-
-    headers = ["Class", "Average Precision"]
-    print(tabulate(table, headers, tablefmt="grid"))
-
-    # Report average results in table
-    avg_table = [["Average", f"{np.mean(ap_score)*100:.2f}"]]
-    headers = ["", "Average Precision"]
-
-    print(tabulate(avg_table, headers, tablefmt="grid"))
+    test_ap_score = eval_and_print(model, test_data, classes)
     
     print('CORRECTLY FINISHED TRAINING AND INFERENCE')
 
