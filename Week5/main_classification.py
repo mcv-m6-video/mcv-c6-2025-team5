@@ -135,8 +135,7 @@ def main(args):
     )
 
     # Model
-    model = Model(args=args)
-    # model = NewModel(args=args)
+    model = NewModel(args=args) if "eud" in args.model else Model(args=args)
 
     print("Finetune LR Factor", args.finetune_lr_factor)
     optimizer, scaler = model.get_optimizer({'lr': args.learning_rate}, finetune_lr_factor=args.finetune_lr_factor)
