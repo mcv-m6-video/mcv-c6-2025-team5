@@ -17,7 +17,7 @@ def evaluate(model, dataset, batch_size=INFERENCE_BATCH_SIZE):
     labels = []
     # Perform inference
     for clip in tqdm(DataLoader(
-            dataset, num_workers=batch_size * 2, pin_memory=True,
+            dataset, num_workers=4, pin_memory=True,
             batch_size=batch_size
     )):
         # Batched by dataloader
