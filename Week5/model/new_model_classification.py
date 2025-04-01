@@ -8,6 +8,7 @@ import torch.nn.functional as F
 
 # Local imports
 from model.modules import BaseRGBModel, FCLayers, step
+from model.losses import BinaryFocalLoss
 
 ############################
 # 1) Simple Attn Pooling
@@ -229,6 +230,7 @@ class NewModel(BaseRGBModel):
         self._model = NewImpl(args=args)
         self._model.print_stats()
         self._args = args
+        self.loss = BinaryFocalLoss() if args.loss == "focal" else F.binary_cross_entropy_with_logits
 
         self._model.to(self.device)
         self._num_classes = args.num_classes
@@ -251,7 +253,7 @@ class NewModel(BaseRGBModel):
 
                 with torch.cuda.amp.autocast(enabled=(self.device=="cuda")):
                     logits = self._model(frames)
-                    loss = F.binary_cross_entropy_with_logits(logits, labels)
+                    loss = self.loss(logits, labels)
 
                 if optimizer is not None:
                     step(optimizer, scaler, loss, lr_scheduler=lr_scheduler)

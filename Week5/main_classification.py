@@ -66,7 +66,7 @@ def get_lr_scheduler(args, optimizer, num_steps_per_epoch, logger = setup_logger
         CosineAnnealingLR(optimizer,
             num_steps_per_epoch * cosine_epochs)])
 
-def eval_and_print(model, data, classes, logger):
+def eval_and_print(model, data, classes, logger = setup_logger(log_file='log.log')):
     ap_score = evaluate(model, data)
 
     # Report results per-class in table
@@ -94,7 +94,7 @@ def eval_and_print(model, data, classes, logger):
 def main(args):
     logger = setup_logger(log_file='log.log')
     # Set seed
-    logger.info('Setting seed to: ', args.seed)
+    logger.info('Setting seed to: {}'.format(args.seed))
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     random.seed(args.seed)
@@ -160,8 +160,8 @@ def main(args):
             
             val_loss = model.epoch(val_loader)
             
-            val_ap_score = eval_and_print(model, val_data, classes)
-            test_ap_score = eval_and_print(model, test_data, classes)
+            val_ap_score = eval_and_print(model, val_data, classes, logger)
+            test_ap_score = eval_and_print(model, test_data, classes, logger)
             better_loss = False
             if val_loss < best_criterion:
                 best_criterion = val_loss
@@ -173,7 +173,7 @@ def main(args):
                 better_ap = True
 
             #Printing info epoch
-            logger.info('[Epoch {}] Train loss: {:0.5f} Val loss: {:0.5f}'.format(
+            logger.info('[Epoch {}] Train loss: {:0.5f} | Val loss: {:0.5f}'.format(
                 epoch, train_loss, val_loss))
             if better_loss:
                 logger.info('New best loss epoch!')
@@ -196,10 +196,10 @@ def main(args):
     logger.info('START INFERENCE')
     logger.info('BEST VAL LOSS')
     model.load(torch.load(os.path.join(ckpt_dir, 'checkpoint_best_loss.pt')))
-    test_ap_score = eval_and_print(model, test_data, classes)
+    test_ap_score = eval_and_print(model, test_data, classes, logger)
     logger.info('BEST VAL AP')
     model.load(torch.load(os.path.join(ckpt_dir, 'checkpoint_best_ap.pt')))
-    test_ap_score = eval_and_print(model, test_data, classes)
+    test_ap_score = eval_and_print(model, test_data, classes, logger)
 
     logger.info('CORRECTLY FINISHED TRAINING AND INFERENCE')
 

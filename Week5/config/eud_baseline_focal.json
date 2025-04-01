@@ -1,8 +1,8 @@
 {
-    "frame_dir": "/ghome/c5mcv05/IvanSoccer/CVMasterActionRecognitionSpotting/frames/398x224",
-    "save_dir": "/ghome/c5mcv05/Eudald/saved-Soccer",
-    "labels_dir": "/ghome/c5mcv05/SoccerNet/allVideos",
-    "store_mode": "store",
+    "frame_dir": "/home/msiau/data/tmp/ptruong/data/SoccerNet/SN-BAS-2025_frames/398x224",
+    "save_dir": "/home/msiau/data/tmp/ptruong/data/SoccerNet/SN-BAS-2025_savedata",
+    "labels_dir": "/home/msiau/data/tmp/ptruong/data/SoccerNet/SN-BAS-2025",
+    "store_mode": "load",
     "task": "classification",
     "batch_size": 4,
     "clip_len": 50,
@@ -12,10 +12,11 @@
     "feature_arch": "rny002_TemporalAttention",
     "learning_rate": 0.001,
     "finetune_lr_factor": 0.1,
+    "loss": "focal",
     "num_classes": 12,
     "num_epochs": 35,
     "warm_up_epochs": 3,
     "only_test": false,
     "device": "cuda",
-    "num_workers": 4
+    "num_workers": 8
 }

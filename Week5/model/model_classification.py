@@ -15,6 +15,7 @@ import torch.nn.functional as F
 #Local imports
 from model.modules import BaseRGBModel, FCLayers, step
 from model.losses import BinaryFocalLoss
+from util.logger import setup_logger
 class Model(BaseRGBModel):
 
     class Impl(nn.Module):
@@ -93,8 +94,9 @@ class Model(BaseRGBModel):
             return x
 
         def print_stats(self, logger = setup_logger(log_file='log.log')):
-            logger.info('Model params:',
-                sum(p.numel() for p in self.parameters()))
+            logger.info('Model params: {}'.format(
+                sum(p.numel() for p in self.parameters())
+            ))
 
     def __init__(self, args=None):
         self.device = "cpu"
