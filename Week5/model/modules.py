@@ -34,7 +34,7 @@ class ABCModel:
 
 class BaseRGBModel(ABCModel):
 
-    def get_optimizer(self, opt_args):
+    def get_optimizer(self, opt_args, finetune_lr_factor=1.0):
         return torch.optim.AdamW(self._get_params(), **opt_args), \
             torch.cuda.amp.GradScaler() if self.device == 'cuda' else None
 

@@ -20,6 +20,7 @@ from util.io import load_json, store_json
 from util.eval_classification import evaluate
 from dataset.datasets import get_datasets
 from model.model_classification import Model
+from model.new_model_classification import NewModel
 
 
 def get_args():
@@ -43,6 +44,7 @@ def update_args(args, config):
     args.epoch_num_frames = config['epoch_num_frames']
     args.feature_arch = config['feature_arch']
     args.learning_rate = config['learning_rate']
+    args.finetune_lr_factor = config['finetune_lr_factor'] if 'finetune_lr_factor' in config else 1
     args.num_classes = config['num_classes']
     args.num_epochs = config['num_epochs']
     args.warm_up_epochs = config['warm_up_epochs']
@@ -106,9 +108,10 @@ def main(args):
     )
 
     # Model
-    model = Model(args=args)
+    model = NewModel(args=args)
 
-    optimizer, scaler = model.get_optimizer({'lr': args.learning_rate})
+    print("Finetune LR Factor", args.finetune_lr_factor)
+    optimizer, scaler = model.get_optimizer({'lr': args.learning_rate}, finetune_lr_factor=args.finetune_lr_factor)
 
     if not args.only_test:
         # Warmup schedule
