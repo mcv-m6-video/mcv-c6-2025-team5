@@ -1,5 +1,5 @@
 {
-    "frame_dir": "~/SoccerNet/allVideos",
+    "frame_dir": "~/IvanSoccer/CVMasterActionRecognitionSpotting/frames/398x224",
     "save_dir": "~/Eudald/saved-Soccer",
     "labels_dir": "~/SoccerNet/allVideos",
     "store_mode": "store",
