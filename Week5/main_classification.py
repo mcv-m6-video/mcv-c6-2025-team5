@@ -71,12 +71,11 @@ def eval_and_print(model, data, classes, logger = setup_logger(log_file='log.log
 
     # Report results per-class in table
     table = []
-    table10 = []
+    ap10 = []
     for i, class_name in enumerate(classes.keys()):
         table.append([class_name, f"{ap_score[i]*100:.2f}"])
         if class_name not in ['FREE KICK', 'GOAL']:
-            table10.append([class_name, f"{ap_score[i]*100:.2f}"])
-
+            ap10.append(ap_score[i]*100)
     headers = ["Class", "Average Precision"]
     logger.info(tabulate(table, headers, tablefmt="grid"))
 
@@ -84,12 +83,12 @@ def eval_and_print(model, data, classes, logger = setup_logger(log_file='log.log
     avg_table = [["Average", f"{np.mean(ap_score)*100:.2f}"]]
     headers = ["", "Average Precision"]
     # Report average10 results in table
-    avg_table10 = [["Average10", f"{np.mean(ap_score)*100:.2f}"]]
+    avg_table10 = [["Average10", f"{np.mean(ap10):.2f}"]]
     headers = ["", "Average Precision"]
 
     logger.info(tabulate(avg_table, headers, tablefmt="grid"))
     logger.info(tabulate(avg_table10, headers, tablefmt="grid"))
-    return ap_score
+    return np.mean(ap_score)
 
 def main(args):
     logger = setup_logger(log_file='log.log')

@@ -16,6 +16,6 @@
     "num_epochs": 35,
     "warm_up_epochs": 3,
     "only_test": false,
-    "device": "cuda:4",
+    "device": "cuda",
     "num_workers": 8
 }
