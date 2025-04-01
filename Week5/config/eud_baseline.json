@@ -1,8 +1,8 @@
 {
-    "frame_dir": "C:/Users/EudaldVilanova/Documents/C6/mcv-c6-2025-team5/AICity_data/398x224",
-    "save_dir": "C:\\Users\\EudaldVilanova\\Downloads\\saved-Soccer",
-    "labels_dir": "C:\\Users\\EudaldVilanova\\Downloads\\Soccer",
-    "store_mode": "load",
+    "frame_dir": "/ghome/c5mcv05/IvanSoccer/CVMasterActionRecognitionSpotting/frames/398x224",
+    "save_dir": "/ghome/c5mcv05/Eudald/saved-Soccer",
+    "labels_dir": "/ghome/c5mcv05/SoccerNet/allVideos",
+    "store_mode": "store",
     "task": "classification",
     "batch_size": 4,
     "clip_len": 50,
