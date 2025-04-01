@@ -14,7 +14,7 @@ import torch.nn.functional as F
 
 #Local imports
 from model.modules import BaseRGBModel, FCLayers, step
-
+from model.losses import BinaryFocalLoss
 class Model(BaseRGBModel):
 
     class Impl(nn.Module):
@@ -92,18 +92,19 @@ class Model(BaseRGBModel):
                 x[i] = self.standarization(x[i])
             return x
 
-        def print_stats(self):
-            print('Model params:',
+        def print_stats(self, logger = setup_logger(log_file='log.log')):
+            logger.info('Model params:',
                 sum(p.numel() for p in self.parameters()))
 
     def __init__(self, args=None):
         self.device = "cpu"
-        if torch.cuda.is_available() and ("device" in args) and (args.device == "cuda"):
-            self.device = "cuda"
+        if torch.cuda.is_available() and ("device" in args) and ("cuda" in args.device):
+            self.device = args.device
 
         self._model = Model.Impl(args=args)
         self._model.print_stats()
         self._args = args
+        self.loss = BinaryFocalLoss() if args.loss == "focal" else F.binary_cross_entropy_with_logits
 
         self._model.to(self.device)
         self._num_classes = args.num_classes
@@ -127,7 +128,7 @@ class Model(BaseRGBModel):
 
                 with torch.cuda.amp.autocast():
                     pred = self._model(frame)
-                    loss = F.binary_cross_entropy_with_logits(
+                    loss = self.loss(
                             pred, label)
 
                 if optimizer is not None:
