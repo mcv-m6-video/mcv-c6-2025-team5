@@ -71,8 +71,11 @@ def eval_and_print(model, data, classes, logger):
 
     # Report results per-class in table
     table = []
+    table10 = []
     for i, class_name in enumerate(classes.keys()):
         table.append([class_name, f"{ap_score[i]*100:.2f}"])
+        if class_name not in ['FREE KICK', 'GOAL']:
+            table10.append([class_name, f"{ap_score[i]*100:.2f}"])
 
     headers = ["Class", "Average Precision"]
     logger.info(tabulate(table, headers, tablefmt="grid"))
@@ -80,8 +83,12 @@ def eval_and_print(model, data, classes, logger):
     # Report average results in table
     avg_table = [["Average", f"{np.mean(ap_score)*100:.2f}"]]
     headers = ["", "Average Precision"]
+    # Report average10 results in table
+    avg_table10 = [["Average10", f"{np.mean(ap_score)*100:.2f}"]]
+    headers = ["", "Average Precision"]
 
     logger.info(tabulate(avg_table, headers, tablefmt="grid"))
+    logger.info(tabulate(avg_table10, headers, tablefmt="grid"))
     return ap_score
 
 def main(args):
@@ -156,18 +163,22 @@ def main(args):
             
             val_ap_score = eval_and_print(model, val_data, classes)
             test_ap_score = eval_and_print(model, test_data, classes)
-            better = False
-            # if val_loss < best_criterion:
-            #     best_criterion = val_loss
-            #     better = True
+            better_loss = False
+            if val_loss < best_criterion:
+                best_criterion = val_loss
+                better_loss = True
+
+            better_ap = False
             if val_ap_score >= best_ap:
                 best_ap = val_ap_score
-                better = True
+                better_ap = True
 
             #Printing info epoch
             logger.info('[Epoch {}] Train loss: {:0.5f} Val loss: {:0.5f}'.format(
                 epoch, train_loss, val_loss))
-            if better:
+            if better_loss:
+                logger.info('New best loss epoch!')
+            if better_ap:
                 logger.info('New best mAP epoch!')
 
             losses.append({
@@ -178,14 +189,19 @@ def main(args):
                 os.makedirs(args.save_dir, exist_ok=True)
                 store_json(os.path.join(args.save_dir, 'loss.json'), losses, pretty=True)
 
-                if better:
-                    torch.save( model.state_dict(), os.path.join(ckpt_dir, 'checkpoint_best.pt') )
+                if better_loss:
+                    torch.save( model.state_dict(), os.path.join(ckpt_dir, 'checkpoint_best_loss.pt') )
+                if better_ap:
+                    torch.save( model.state_dict(), os.path.join(ckpt_dir, 'checkpoint_best_ap.pt') )
 
     logger.info('START INFERENCE')
-    model.load(torch.load(os.path.join(ckpt_dir, 'checkpoint_best.pt')))
-
+    logger.info('BEST VAL LOSS')
+    model.load(torch.load(os.path.join(ckpt_dir, 'checkpoint_best_loss.pt')))
     test_ap_score = eval_and_print(model, test_data, classes)
-    
+    logger.info('BEST VAL AP')
+    model.load(torch.load(os.path.join(ckpt_dir, 'checkpoint_best_ap.pt')))
+    test_ap_score = eval_and_print(model, test_data, classes)
+
     logger.info('CORRECTLY FINISHED TRAINING AND INFERENCE')
 
 
