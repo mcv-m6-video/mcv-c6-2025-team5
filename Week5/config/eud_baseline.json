@@ -1,7 +1,7 @@
 {
     "frame_dir": "~/SoccerNet/allVideos",
     "save_dir": "~/Eudald/saved-Soccer",
-    "labels_dir": "~/SoccerNet/SN-BAS-2025",
+    "labels_dir": "~/SoccerNet/allVideos",
     "store_mode": "store",
     "task": "classification",
     "batch_size": 4,
