@@ -148,7 +148,7 @@ def main(args):
             args, optimizer, num_steps_per_epoch)
         
         losses = []
-        # best_criterion = float('inf')
+        best_criterion = float('inf')
         best_ap = 0.0
         epoch = 0
 
