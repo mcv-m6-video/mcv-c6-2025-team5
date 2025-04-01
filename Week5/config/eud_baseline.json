@@ -1,7 +1,7 @@
 {
-    "frame_dir": "~/IvanSoccer/CVMasterActionRecognitionSpotting/frames/398x224",
-    "save_dir": "~/Eudald/saved-Soccer",
-    "labels_dir": "~/SoccerNet/allVideos",
+    "frame_dir": "/ghome/c5mcv05/IvanSoccer/CVMasterActionRecognitionSpotting/frames/398x224",
+    "save_dir": "/ghome/c5mcv05/Eudald/saved-Soccer",
+    "labels_dir": "/ghome/c5mcv05/SoccerNet/allVideos",
     "store_mode": "store",
     "task": "classification",
     "batch_size": 4,
