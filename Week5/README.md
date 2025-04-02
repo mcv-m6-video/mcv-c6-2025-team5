@@ -38,3 +38,9 @@ For additional details on configuration options using the configuration file, re
 ## Support
 
 For any issues related to the code, please email [aclapes@ub.edu](mailto:aclapes@ub.edu) and CC [arturxe@gmail.com](mailto:arturxe@gmail.com).
+
+---
+The best model can be found at `/best_model/eud_baseline`. We obtained it with the following command:
+```
+python main_classification.py --model eud_baseline
+```
