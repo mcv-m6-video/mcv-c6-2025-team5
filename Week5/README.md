@@ -1,6 +1,14 @@
 ### Master in Computer Vision (Barcelona) 2024/25
 # Project 2 (Task 1) @ C6 - Video Analysis
 
+
+---
+The best model can be found at `/best_model/eud_baseline`. We obtained it with the following command:
+```
+python main_classification.py --model eud_baseline
+```
+---
+
 This repository provides the starter code for Task 1 of Project 2: Action classification on the SoccerNet Ball Action Spotting 2025 (SN-BAS-2025) dataset.
 
 The installation of dependencies, how to obtain the dataset, and instructions on running the classification baseline are detailed next.
@@ -38,9 +46,3 @@ For additional details on configuration options using the configuration file, re
 ## Support
 
 For any issues related to the code, please email [aclapes@ub.edu](mailto:aclapes@ub.edu) and CC [arturxe@gmail.com](mailto:arturxe@gmail.com).
-
----
-The best model can be found at `/best_model/eud_baseline`. We obtained it with the following command:
-```
-python main_classification.py --model eud_baseline
-```
