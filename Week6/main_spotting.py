@@ -83,7 +83,7 @@ def main(args):
 
     run_id = time.strftime("%Y%m%d_%H%M%S")
     run_name = f"model_{args.model}_run_{run_id}"
-    wandb.init(project="spotting", name=run_name, config=vars(args),dir=args.save_dir)
+    wandb.init(project="action-spotting", name=run_name, config=vars(args),dir=args.save_dir)
 
     # Get datasets train, validation (and validation for map -> Video dataset)
     classes, train_data, val_data, test_data, val_extra_data = get_datasets(args)
@@ -138,6 +138,7 @@ def main(args):
                 lr_scheduler=lr_scheduler)
             
             val_map, val_ap_scores = evaluate(model, val_extra_data, nms_window=5)
+            val_loss = model.epoch(val_loader)
 
             ap10_scores = []
             for i, class_name in enumerate(classes.keys()):
