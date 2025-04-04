@@ -147,8 +147,8 @@ def main(args):
             val_map10 = np.mean(ap10_scores)
 
 
-            print('[Epoch {}] Train loss: {:0.5f} Val mAP: {:0.5f} Val mAP@10: {:0.5f}'.format(
-                epoch, train_loss, val_map, val_map10))
+            print('[Epoch {}] Train loss: {:0.5f} Val loss: {:0.5f} Val mAP: {:0.5f} Val mAP@10: {:0.5f}'.format(
+                epoch, train_loss, val_loss, val_map, val_map10))
 
             better = val_map10 > best_map10
             if better:
