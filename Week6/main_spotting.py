@@ -87,6 +87,7 @@ def main(args):
 
     # Get datasets train, validation (and validation for map -> Video dataset)
     classes, train_data, val_data, test_data = get_datasets(args)
+    classes, train_data, val_data, test_data, val_extra_data = get_datasets(args)
 
     if args.store_mode == 'store':
         print('Datasets have been stored correctly! Re-run changing "mode" to "load" in the config JSON.')
@@ -137,7 +138,7 @@ def main(args):
                 train_loader, optimizer, scaler,
                 lr_scheduler=lr_scheduler)
             
-            val_map, val_ap_scores = evaluate(model, val_data, nms_window=5)
+            val_map, val_ap_scores = evaluate(model, val_extra_data, nms_window=5)
 
             ap10_scores = []
             for i, class_name in enumerate(classes.keys()):
