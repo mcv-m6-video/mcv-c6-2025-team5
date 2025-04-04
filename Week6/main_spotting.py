@@ -86,7 +86,6 @@ def main(args):
     wandb.init(project="spotting", name=run_name, config=vars(args),dir=args.save_dir)
 
     # Get datasets train, validation (and validation for map -> Video dataset)
-    classes, train_data, val_data, test_data = get_datasets(args)
     classes, train_data, val_data, test_data, val_extra_data = get_datasets(args)
 
     if args.store_mode == 'store':
