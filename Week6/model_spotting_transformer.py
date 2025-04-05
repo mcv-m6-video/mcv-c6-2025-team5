@@ -38,16 +38,21 @@ class Model(BaseRGBModel):
             self._features = features
 
             # --- Temporal Transformer ---
-            self.max_seq_len = args.clip_len  # e.g., 16 or 32
+            self.max_seq_len = args.clip_len
             self.positional_encoding = nn.Parameter(torch.randn(1, self.max_seq_len, self._d))
+
+            num_heads = args.num_heads_transformer
+            num_layers = args.num_layers_transformer
+
             encoder_layer = nn.TransformerEncoderLayer(
                 d_model=self._d,
-                nhead=8,
+                nhead=num_heads,
                 dim_feedforward=self._d * 2,
                 dropout=0.1,
                 batch_first=True
             )
-            self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=2)
+            self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+
 
             # --- MLP for classification ---
             self._fc = FCLayers(self._d, args.num_classes + 1)

@@ -51,6 +51,8 @@ def update_args(args, config):
     args.only_test = config['only_test']
     args.device = config['device']
     args.num_workers = config['num_workers']
+    args.num_heads_transformer = config['num_heads_transformer']
+    args.num_layers_transformer = config['num_layers_transformer']
 
     return args
 
