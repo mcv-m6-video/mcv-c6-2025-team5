@@ -22,6 +22,7 @@ from util.io import load_json, store_json
 from util.eval_spotting import evaluate
 from dataset.datasets import get_datasets
 from model.model_spotting_transformer import Model
+from model.model_spotting_x3d import ModelX3D
 
 
 
@@ -116,7 +117,10 @@ def main(args):
     )
 
     # Model
-    model = Model(args=args)
+    if 'x3d' in args.feature_arch:
+        model = ModelX3D(args=args)
+    else:
+        model = Model(args=args)
 
     optimizer, scaler = model.get_optimizer({'lr': args.learning_rate})
 
