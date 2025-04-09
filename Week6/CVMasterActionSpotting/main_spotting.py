@@ -121,7 +121,7 @@ def main(args):
     if 'x3d' in args.feature_arch:
         model = ModelX3D(args=args)
     else:
-        model = BaseModel(args=args)
+        model = Model(args=args)
 
     optimizer, scaler = model.get_optimizer({'lr': args.learning_rate})
 
