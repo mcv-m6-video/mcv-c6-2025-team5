@@ -203,9 +203,9 @@ class ModelX3D(BaseRGBModel):
             self._model.eval()
             inference = True
         else:
+            optimizer.zero_grad()
             self._model.train()
             inference = False
-            optimizer.zero_grad()
 
         # Weighted cross-entropy
         weights = torch.tensor([1.0] + [5.0] * self._num_classes, dtype=torch.float32).to(self.device)
