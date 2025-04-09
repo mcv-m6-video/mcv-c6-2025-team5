@@ -153,9 +153,10 @@ class ModelX3D(BaseRGBModel):
             # 5) Forward pass:
             #    - the trunk (model.blocks) => [B, out_channels, T, H, W]
             #    - the custom partial pool head => [B, T, num_classes+1]
-            feats_3d = self._features.blocks(x)         # "trunk" part
+            feats_3d = self._features(x)         # "trunk" part
             print(feats_3d.shape)
             logits = self._features.per_frame_head(feats_3d)  # "head"
+            print(logits.shape)
 
             return logits  # shape => [B, T, num_classes+1]
 
