@@ -31,7 +31,6 @@ def evaluate(model, dataset, batch_size=INFERENCE_BATCH_SIZE, nms_window = 5):
     )):
         # Batched by dataloader
         batch_pred_scores = model.predict(clip['frame']) # remove background class
-        print(batch_pred_scores.shape)
 
         for i in range(clip['frame'].shape[0]):
             video = clip['video'][i]
