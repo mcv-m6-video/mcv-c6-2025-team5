@@ -128,7 +128,7 @@ class ModelX3D(BaseRGBModel):
         if torch.cuda.is_available() and ("device" in args) and (args.device == "cuda"):
             self.device = "cuda"
 
-        self._model = Model.Impl(args=args)
+        self._model = ModelX3D.Impl(args=args)
         self._model.print_stats()
         self._args = args
 
