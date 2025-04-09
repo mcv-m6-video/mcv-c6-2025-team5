@@ -10,7 +10,7 @@ from tqdm import tqdm
 # Local imports
 from model.modules import BaseRGBModel, FCLayers, step
 
-class Model(BaseRGBModel):
+class ModelX3D(BaseRGBModel):
     """
     A single X3D model that directly takes a clip [B, T, C, H, W]
     and outputs [B, num_classes+1] for clip-level classification,
@@ -133,7 +133,7 @@ class Model(BaseRGBModel):
         if torch.cuda.is_available() and ("device" in args) and (args.device == "cuda"):
             self.device = "cuda"
 
-        self._model = Model.Impl(args=args)
+        self._model = ModelX3D.Impl(args=args)
         self._model.print_stats()
         self._args = args
         self._model.to(self.device)
