@@ -40,10 +40,7 @@ class ModelX3D(BaseRGBModel):
 
             # Create the TIMM model
             # timm has "x3d_s", "x3d_m", etc. for X3D variants
-            self._features = timm.create_model(
-                x3d_variant, 
-                pretrained=True
-            )
+            self._features = model = torch.hub.load('facebookresearch/pytorchvideo', x3d_variant, pretrained=True)
             # By default, timm X3D does global average pooling over (space,time) and 
             # produces shape [B, out_dim]. We remove the classifier for our own head:
             out_dim = self._features.classifier.in_features
