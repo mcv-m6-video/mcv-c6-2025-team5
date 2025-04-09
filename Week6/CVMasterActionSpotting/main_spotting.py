@@ -22,6 +22,7 @@ from util.io import load_json, store_json
 from util.eval_spotting import evaluate
 from dataset.datasets import get_datasets
 from model.model_spotting_transformer import Model
+# from model.model_spotting_transformer_stackedframes import Model
 
 
 

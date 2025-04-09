@@ -14,6 +14,7 @@ import torch.nn.functional as F
 
 #Local imports
 from model.modules import BaseRGBModel, FCLayers, step
+from model.losses import focal_loss_multi_class
 
 class Model(BaseRGBModel):
 
@@ -147,8 +148,8 @@ class Model(BaseRGBModel):
                     pred = self._model(frame)
                     pred = pred.view(-1, self._num_classes + 1) # B*T, num_classes
                     label = label.view(-1) # B*T
-                    loss = F.cross_entropy(
-                            pred, label, reduction='mean', weight = weights)
+                    loss = focal_loss_multi_class(
+                            pred, label, reduction='mean',gamma=1.2, alpha=weights)#F.cross_entropy(, weight = weights
 
                 if optimizer is not None:
                     step(optimizer, scaler, loss,
