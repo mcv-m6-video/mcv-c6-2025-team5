@@ -48,8 +48,13 @@ class ModelX3D(BaseRGBModel):
                 pretrained=True
             )
 
+            print(model) 
+
             # The final classification layer is typically model.head.projection,
             # which we remove and replace with our own:
+            head_block = model.blocks[-1]
+            out_dim = head_block.proj.in_features
+            head_block.proj = nn.Identity()
             out_dim = model.head.projection.in_features
             model.head.projection = nn.Identity()
 
