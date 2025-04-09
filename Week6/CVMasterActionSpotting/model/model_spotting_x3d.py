@@ -35,7 +35,7 @@ class ModelX3D(BaseRGBModel):
             else:
                 self._trainable_layers = 0
 
-            print(self._trainable_layers)
+            print("Trainable Layers: ", self._trainable_layers)
 
             # ------------------------------------------------------------------
             # 2) Load X3D from PyTorchVideo Hub
@@ -54,17 +54,10 @@ class ModelX3D(BaseRGBModel):
             # which we remove and replace with our own:
             head_block = model.blocks[-1]
             out_dim = head_block.proj.in_features
-            head_block.proj = nn.Identity()
-            out_dim = model.head.projection.in_features
-            model.head.projection = nn.Identity()
+            head_block.proj = nn.Linear(out_dim, args.num_classes+1, bias=True)
 
             self._features = model
             self._freeze_backbone(self._features, self._trainable_layers)
-
-            # ------------------------------------------------------------------
-            # 3) Our new classification head: [B, out_dim] -> [B, num_classes+1]
-            # ------------------------------------------------------------------
-            self._fc = FCLayers(out_dim, args.num_classes + 1)
 
             # ------------------------------------------------------------------
             # 4) Data augmentations & normalization
@@ -105,10 +98,7 @@ class ModelX3D(BaseRGBModel):
             x = x.permute(0, 2, 1, 3, 4).contiguous()  # [B, C, T, H, W]
 
             # 5) Forward pass in X3D => global pool => [B, out_dim]
-            feats = self._features(x)
-
-            # 6) Classification => [B, num_classes+1]
-            logits = self._fc(feats)
+            logits = self._features(x)
 
             return logits
 
