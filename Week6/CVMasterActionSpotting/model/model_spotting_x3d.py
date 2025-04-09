@@ -1,58 +1,69 @@
 # model_spotting_x3d.py
 
 import torch
-from torch import nn
-import timm
-import torchvision.transforms as T
+import torch.nn as nn
 import torch.nn.functional as F
+import torchvision.transforms as T
 from contextlib import nullcontext
 from tqdm import tqdm
-import math
 
 # Local imports
 from model.modules import BaseRGBModel, FCLayers, step
 
-
-class ModelX3D(BaseRGBModel):
+class Model(BaseRGBModel):
     """
     A single X3D model that directly takes a clip [B, T, C, H, W]
-    and outputs [B, num_classes+1] for clip-level classification.
+    and outputs [B, num_classes+1] for clip-level classification,
+    using PyTorchVideo's X3D from torch.hub.
     """
 
     class Impl(nn.Module):
         def __init__(self, args=None):
             super().__init__()
-
-            # ---- 1) Parse feature_arch for X3D variant & create model  ----
-            # For example, feature_arch might be "x3d_s", "x3d_m", "x3d_l", etc.
-            self._feature_arch = args.feature_arch
-            # We'll assume you have something like "x3d_s_3train" meaning "x3d_s" with 3 trainable layers, or
-            # interpret however your config is set up. 
-            # Example: "x3d_s" => small, "x3d_m" => medium, etc.
-
-            # If you want to parse an underscore to get the trainable layers, do it here:
-            arch_parts = self._feature_arch.split('-')
+            # ------------------------------------------------------------------
+            # 1) Parse feature_arch to figure out which X3D variant to load
+            #    and how many layers to unfreeze.
+            #    E.g., if feature_arch="x3d_s_3", we interpret x3d_variant = "x3d_s"
+            #    and trainable_layers = 3. Adjust to match your naming scheme.
+            # ------------------------------------------------------------------
+            arch_parts = args.feature_arch.split('-')
             x3d_variant = arch_parts[0]  # e.g. "x3d_s"
+            
+            # Check if last part is digit => number of trainable layers
             if len(arch_parts) > 1 and arch_parts[-1].isdigit():
-                self._trainable_layers = int(arch_parts[-1])  # e.g. 3
+                self._trainable_layers = int(arch_parts[-1])
             else:
-                self._trainable_layers = 0  # if not specified, 0 => freeze everything except final fc
+                self._trainable_layers = 0
 
-            # Create the TIMM model
-            # timm has "x3d_s", "x3d_m", etc. for X3D variants
-            self._features = model = torch.hub.load('facebookresearch/pytorchvideo', x3d_variant, pretrained=True)
-            # By default, timm X3D does global average pooling over (space,time) and 
-            # produces shape [B, out_dim]. We remove the classifier for our own head:
-            out_dim = self._features.classifier.in_features
-            self._features.classifier = nn.Identity()
+            print(self._trainable_layers)
 
-            # ---- 2) Partial Finetuning: freeze everything except the last N layers  ----
+            # ------------------------------------------------------------------
+            # 2) Load X3D from PyTorchVideo Hub
+            #    For instance: "x3d_s", "x3d_m", "x3d_l"
+            # ------------------------------------------------------------------
+            print(f"Loading X3D variant: {x3d_variant}, pretrained=True")
+            model = torch.hub.load(
+                'facebookresearch/pytorchvideo', 
+                x3d_variant, 
+                pretrained=True
+            )
+
+            # The final classification layer is typically model.head.projection,
+            # which we remove and replace with our own:
+            out_dim = model.head.projection.in_features
+            model.head.projection = nn.Identity()
+
+            self._features = model
             self._freeze_backbone(self._features, self._trainable_layers)
 
-            # ---- 3) Final classification layer [B, out_dim] -> [B, num_classes+1]  ----
+            # ------------------------------------------------------------------
+            # 3) Our new classification head: [B, out_dim] -> [B, num_classes+1]
+            # ------------------------------------------------------------------
             self._fc = FCLayers(out_dim, args.num_classes + 1)
 
-            # ---- 4) Data augmentation & normalization (same as before)  ----
+            # ------------------------------------------------------------------
+            # 4) Data augmentations & normalization
+            # ------------------------------------------------------------------
             self.augmentation = T.Compose([
                 T.RandomApply([T.ColorJitter(hue=0.2)], p=0.25),
                 T.RandomApply([T.ColorJitter(saturation=(0.7, 1.2))], p=0.25),
@@ -68,45 +79,42 @@ class ModelX3D(BaseRGBModel):
 
         def forward(self, x):
             """
-            x: [B, T, C, H, W], 8-16 frames typically
-            Returns: [B, T(?), num_classes+1] or [B, num_classes+1] 
-                     Depending on your intended structure. 
-            Here we do a single clip-level classification => [B, num_classes+1].
+            x: [B, T, C, H, W] in [0..255].
+            Returns: [B, num_classes+1].
             """
-
-            # 1) Scale from [0..255] to [0..1]
+            # 1) Scale from [0..255] -> [0..1]
             x = x / 255.0
 
-            # 2) Possibly apply augmentation (per-clip, but done frame by frame).
             B, T, C, H, W = x.shape
+
+            # 2) Data augmentation for each sample
             if self.training:
                 for i in range(B):
                     x[i] = self.augmentation(x[i])  # shape [T, C, H, W]
 
-            # 3) Standardize each frame 
-            #    (Note: we do it frame by frame. That is consistent with your existing code.)
+            # 3) Standardize each sub-tensor
             for i in range(B):
-                x[i] = self.standarization(x[i])
+                x[i] = self.standarization(x[i])  # [T, C, H, W]
 
-            # 4) Reorder to X3D input format: [B, C, T, H, W]
-            x = x.permute(0, 2, 1, 3, 4).contiguous()
+            # 4) Reorder to X3D's expected input format [B, C, T, H, W]
+            x = x.permute(0, 2, 1, 3, 4).contiguous()  # [B, C, T, H, W]
 
-            # 5) Forward pass through X3D (global pool in space & time by default => [B, out_dim])
-            feats = self._features(x)  # shape [B, out_dim]
+            # 5) Forward pass in X3D => global pool => [B, out_dim]
+            feats = self._features(x)
 
             # 6) Classification => [B, num_classes+1]
-            logits = self._fc(feats)  
+            logits = self._fc(feats)
 
             return logits
 
         def _freeze_backbone(self, backbone, trainable_layers):
             """
-            Freeze all layers except the last 'trainable_layers' parameter sets.
-            If trainable_layers=0, everything is frozen except the newly added final FC.
-            If trainable_layers is large, you'll unfreeze more.
+            Freeze all layers except the last 'trainable_layers' param groups.
+            If trainable_layers=0, everything is frozen except the final FC we replaced.
+            If trainable_layers is large, unfreeze more.
             """
             all_params = list(backbone.parameters())
-            # First, freeze everything
+            # Freeze everything
             for p in all_params:
                 p.requires_grad = False
             # Unfreeze the last 'trainable_layers' param groups
@@ -115,28 +123,28 @@ class ModelX3D(BaseRGBModel):
                     p.requires_grad = True
 
         def print_stats(self):
-            print('Model params:',
-                  sum(p.numel() for p in self.parameters() if p.requires_grad),
-                  '(trainable only, out of total:',
-                  sum(p.numel() for p in self.parameters()), ')')
+            # Count trainable vs total
+            total = sum(p.numel() for p in self.parameters())
+            trainable = sum(p.numel() for p in self.parameters() if p.requires_grad)
+            print(f'Model params: {trainable} (trainable) out of {total} total.')
 
     def __init__(self, args=None):
         self.device = "cpu"
         if torch.cuda.is_available() and ("device" in args) and (args.device == "cuda"):
             self.device = "cuda"
 
-        self._model = ModelX3D.Impl(args=args)
+        self._model = Model.Impl(args=args)
         self._model.print_stats()
         self._args = args
-
         self._model.to(self.device)
+
         self._num_classes = args.num_classes
 
     def epoch(self, loader, optimizer=None, scaler=None, lr_scheduler=None):
         """
-        If optimizer is not None, we are training. Otherwise, inference mode.
+        If optimizer is None => inference mode. Otherwise, train mode.
         We'll do cross-entropy with an extra background class => [B, num_classes+1].
-        For each clip: label is a single integer in [0..num_classes].
+        Each sample is a single clip => label in [0..num_classes].
         """
 
         if optimizer is None:
@@ -145,50 +153,43 @@ class ModelX3D(BaseRGBModel):
             self._model.train()
             optimizer.zero_grad()
 
-        # Weights for cross-entropy (background=1.0, each real class=5.0, for example)
-        weights = torch.tensor([1.0] + [5.0] * (self._num_classes), dtype=torch.float32).to(self.device)
-
+        # Weighted cross-entropy
+        weights = torch.tensor([1.0] + [5.0] * self._num_classes, dtype=torch.float32).to(self.device)
         epoch_loss = 0.0
+
         with (torch.no_grad() if optimizer is None else nullcontext()):
             for batch_idx, batch in enumerate(tqdm(loader)):
-                frames = batch['frame'].to(self.device).float()  # [B, T, C, H, W]
-                label = batch['label'].to(self.device).long()    # [B, T] or [B], depends on how the dataset is shaped.
+                frames = batch["frame"].to(self.device).float()  # [B, T, C, H, W]
+                label = batch["label"].to(self.device).long()    # e.g. [B], or [B, T]=[B,1]
 
-                # If your dataset is shaped [B, T], but we are doing one label per clip,
-                # you might do label = label[:,0] (just pick first, or check that T=1).
-                # Adjust as needed based on your dataset. For a single clip label, you want [B].
-                if len(label.shape) > 1: 
-                    # If shape is [B, T], make sure we have T=1 or something appropriate
-                    label = label[:, 0]  # example: just the first
-                    # Or some other logic if your dataset is actually multi-frame labeled.
+                # If your dataset has shape [B, T], we might do:
+                if label.ndim == 2:
+                    label = label[:, 0]  # Take the first frame's label, or adapt as needed
 
-                with torch.cuda.amp.autocast(enabled=(self.device=='cuda')):
-                    pred = self._model(frames)  # [B, num_classes+1]
-                    loss = F.cross_entropy(pred, label, reduction='mean', weight=weights)
+                with torch.cuda.amp.autocast(enabled=(self.device == "cuda")):
+                    logits = self._model(frames)  # [B, num_classes+1]
+                    loss = F.cross_entropy(logits, label, reduction='mean', weight=weights)
 
                 if optimizer is not None:
                     step(optimizer, scaler, loss, lr_scheduler=lr_scheduler)
-
                 epoch_loss += loss.detach().item()
 
         return epoch_loss / len(loader)
 
     def predict(self, seq):
         """
-        seq is either [T, C, H, W] or [B, T, C, H, W].
-        Returns the softmax probabilities for each class: shape [B, num_classes+1].
+        seq: [T, C, H, W] or [B, T, C, H, W]
+        Returns: [B, num_classes+1] softmax probabilities
         """
         if not isinstance(seq, torch.Tensor):
             seq = torch.FloatTensor(seq)
-        if len(seq.shape) == 4:  # (T, C, H, W)
+        if seq.ndim == 4:  # single clip
             seq = seq.unsqueeze(0)  # => [B=1, T, C, H, W]
-        if seq.device != self.device:
-            seq = seq.to(self.device)
-        seq = seq.float()
+        seq = seq.to(self.device).float()
 
         self._model.eval()
         with torch.no_grad():
-            with torch.cuda.amp.autocast(enabled=(self.device=='cuda')):
+            with torch.cuda.amp.autocast(enabled=(self.device == "cuda")):
                 logits = self._model(seq)  # [B, num_classes+1]
             probs = torch.softmax(logits, dim=-1)  # [B, num_classes+1]
-            return probs.cpu().numpy()
+        return probs.cpu().numpy()
