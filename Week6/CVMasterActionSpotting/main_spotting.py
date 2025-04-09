@@ -138,6 +138,7 @@ def main(args):
         bad_epochs = 0
 
         print('START TRAINING EPOCHS')
+        val_map, val_ap_scores = evaluate(model, val_extra_data, nms_window=5)
         for epoch in range(epoch, num_epochs):
 
             train_loss = model.epoch(
