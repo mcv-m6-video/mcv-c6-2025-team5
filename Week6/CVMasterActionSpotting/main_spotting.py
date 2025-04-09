@@ -21,7 +21,9 @@ import time
 from util.io import load_json, store_json
 from util.eval_spotting import evaluate
 from dataset.datasets import get_datasets
+from model.model_spotting import Model as BaseModel
 from model.model_spotting_transformer import Model
+from model.model_spotting_x3d import ModelX3D
 # from model.model_spotting_transformer_stackedframes import Model
 
 
@@ -117,7 +119,10 @@ def main(args):
     )
 
     # Model
-    model = Model(args=args)
+    if 'x3d' in args.feature_arch:
+        model = ModelX3D(args=args)
+    else:
+        model = Model(args=args)
 
     optimizer, scaler = model.get_optimizer({'lr': args.learning_rate})
 
@@ -135,6 +140,7 @@ def main(args):
         bad_epochs = 0
 
         print('START TRAINING EPOCHS')
+        val_map, val_ap_scores = evaluate(model, val_extra_data, nms_window=5)
         for epoch in range(epoch, num_epochs):
 
             train_loss = model.epoch(

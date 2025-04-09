@@ -26,7 +26,7 @@ def evaluate(model, dataset, batch_size=INFERENCE_BATCH_SIZE, nms_window = 5):
             np.zeros(video_len, np.int32)) #support matrix T
 
     for clip in tqdm(DataLoader(
-            dataset, num_workers=batch_size * 2, pin_memory=True,
+            dataset, num_workers=4, pin_memory=True,
             batch_size=batch_size
     )):
         # Batched by dataloader

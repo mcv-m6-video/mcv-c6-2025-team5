@@ -1,0 +1,22 @@
+{
+    "frame_dir": "/ghome/c5mcv05/IvanSoccer/CVMasterActionRecognitionSpotting/frames/398x224",
+    "save_dir": "/ghome/c5mcv05/IvanSoccer/CVMasterActionRecognitionSpotting/save_dir",
+    "labels_dir": "/ghome/c5mcv05/SoccerNet/allVideos",
+    "store_mode": "load",
+    "task": "spotting",
+    "batch_size": 4,
+    "clip_len": 50,
+    "stride": 2,
+    "dataset": "soccernetball",
+    "epoch_num_frames": 500000,
+    "feature_arch": "x3d_m-3",
+    "learning_rate": 0.0001,
+    "num_classes": 12,
+    "num_epochs": 20,
+    "warm_up_epochs": 2,
+    "only_test": false,
+    "device": "cuda",
+    "num_workers": 4,
+    "num_heads_transformer": 10,
+    "num_layers_transformer": 3
+}
