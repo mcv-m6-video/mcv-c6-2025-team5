@@ -23,6 +23,7 @@ from util.eval_spotting import evaluate
 from dataset.datasets import get_datasets
 from model.model_spotting import Model as BaseModel
 from model.model_spotting_transformer import Model
+from model.model_spotting_x3dtransformer import Model as ModelX3DTransformer
 from model.model_spotting_x3d import ModelX3D
 # from model.model_spotting_transformer_stackedframes import Model
 
@@ -57,6 +58,7 @@ def update_args(args, config):
     args.num_workers = config['num_workers']
     args.num_heads_transformer = config['num_heads_transformer']
     args.num_layers_transformer = config['num_layers_transformer']
+    args.wandb_project = config.get('wandb_project',"action-spotting")
 
     return args
 
@@ -89,7 +91,7 @@ def main(args):
 
     run_id = time.strftime("%Y%m%d_%H%M%S")
     run_name = f"model_{args.model}_run_{run_id}"
-    wandb.init(project="action-spotting", name=run_name, config=vars(args),dir=args.save_dir)
+    wandb.init(project=args.wandb_project, name=run_name, config=vars(args),dir=args.save_dir)
 
     # Get datasets train, validation (and validation for map -> Video dataset)
     classes, train_data, val_data, test_data, val_extra_data = get_datasets(args)
@@ -120,7 +122,7 @@ def main(args):
 
     # Model
     if 'x3d' in args.feature_arch:
-        model = ModelX3D(args=args)
+        model = ModelX3DTransformer(args=args)
     else:
         model = Model(args=args)
 
@@ -197,7 +199,7 @@ def main(args):
                 store_json(os.path.join(args.save_dir, 'loss.json'), losses, pretty=True)
 
                 if better:
-                    torch.save(model.state_dict(), os.path.join(ckpt_dir, 'checkpoint_best.pt'))
+                    torch.save(model.state_dict(), os.path.join(ckpt_dir, f'{run_name}_checkpoint_best.pt'))
             
             # Early stopping
             if bad_epochs >= patience:
@@ -207,7 +209,7 @@ def main(args):
 
 
     print('START INFERENCE')
-    model.load(torch.load(os.path.join(ckpt_dir, 'checkpoint_best.pt')))
+    model.load(torch.load(os.path.join(ckpt_dir, f'{run_name}_checkpoint_best.pt')))
 
     # Evaluation on test split
     map_score, ap_score = evaluate(model, test_data, nms_window = 5)
