@@ -24,6 +24,7 @@ from dataset.datasets import get_datasets
 from model.model_spotting import Model as BaseModel
 from model.model_spotting_transformer import Model
 from model.model_spotting_x3dtransformer import Model as ModelX3DTransformer
+from model.model_spotting_x3dtransformer_multiscale import Model as ModelX3DTemporalPyramid
 from model.model_spotting_x3d import ModelX3D
 # from model.model_spotting_transformer_stackedframes import Model
 
@@ -58,8 +59,10 @@ def update_args(args, config):
     args.num_workers = config['num_workers']
     args.num_heads_transformer = config['num_heads_transformer']
     args.num_layers_transformer = config['num_layers_transformer']
+    args.num_heads_crossattention = config.get('num_heads_crossattention', 1)
+    args.dim_mlp_transformer = config.get('dim_mlp_transformer', 2)
     args.wandb_project = config.get('wandb_project',"action-spotting")
-
+    args.model_type = config.get('model_type', 'none')
     return args
 
 def get_lr_scheduler(args, optimizer, num_steps_per_epoch):
@@ -121,10 +124,13 @@ def main(args):
     )
 
     # Model
-    if 'x3d' in args.feature_arch:
-        model = ModelX3DTransformer(args=args)
+    if args.model_type == 'pyramid':
+        model = ModelX3DTemporalPyramid(args=args)
     else:
-        model = Model(args=args)
+        if 'x3d' in args.feature_arch:
+            model = ModelX3DTransformer(args=args)
+        else:
+            model = Model(args=args)
 
     optimizer, scaler = model.get_optimizer({'lr': args.learning_rate})
 

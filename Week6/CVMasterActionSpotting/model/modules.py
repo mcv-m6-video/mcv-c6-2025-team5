@@ -6,6 +6,7 @@ File containing the different modules related to the model: T-DEED.
 import abc
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import math
 
 #Local imports
@@ -83,3 +84,16 @@ def step(optimizer, scaler, loss, lr_scheduler=None):
     if lr_scheduler is not None:
         lr_scheduler.step()
     optimizer.zero_grad()
+class CrossAttentionWithResidual(nn.Module):
+    def __init__(self, embed_size, num_heads=1):
+        super(CrossAttentionWithResidual, self).__init__()
+        self.attention = nn.MultiheadAttention(embed_size, num_heads, batch_first=True)
+        self.norm = nn.LayerNorm(embed_size)
+        self.dropout = nn.Dropout(0.1)
+
+    def forward(self, target, source=None):
+        attention_out, att_weights = self.attention(query=target, key=source, value=source)
+        # Add residual connection and layer normalization
+        out = target + self.dropout(attention_out)
+        out = self.norm(out)
+        return out

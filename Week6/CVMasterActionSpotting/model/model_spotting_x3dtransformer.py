@@ -75,7 +75,7 @@ class Model(BaseRGBModel):
             encoder_layer = nn.TransformerEncoderLayer(
                 d_model=self._d,
                 nhead=num_heads,
-                dim_feedforward=self._d * 2,
+                dim_feedforward=self._d * args.dim_mlp_transformer,
                 dropout=0.1,
                 batch_first=True
             )
@@ -204,7 +204,8 @@ class Model(BaseRGBModel):
                     pred = pred.view(-1, self._num_classes + 1) # B*T, num_classes
                     label = label.view(-1) # B*T
                     loss = focal_loss_multi_class(
-                            pred, label, reduction='mean',gamma=1.2, alpha=weights)#F.cross_entropy(, weight = weights
+                            pred, label, reduction='mean',gamma=1.2, alpha=weights)
+                    # loss = F.cross_entropy(pred, label, reduction='mean', weight = weights)
 
                 if optimizer is not None:
                     step(optimizer, scaler, loss,

@@ -15,47 +15,145 @@ import torch.nn.functional as F
 
 
 #Local imports
-from model.modules import BaseRGBModel, FCLayers, step
+from model.modules import BaseRGBModel, FCLayers, step, CrossAttentionWithResidual
 from model.losses import focal_loss_multi_class
 
 
 class TemporalFeaturePyramid(nn.Module):
-    def __init__(self, in_channels, num_scales=3):
+    def __init__(self, num_scales=3, d_model=192, downtr_nhead=12, num_layers=3, uptr_nhead = 12, max_time=50):
         super(TemporalFeaturePyramid, self).__init__()
         self.num_scales = num_scales
-        # Convolutional layers to process each scale
-        self.scale_convs = nn.ModuleList([
-            nn.Conv1d(in_channels, in_channels, kernel_size=3, padding=1)
+        self.d_model = d_model
+        self.max_time = max_time
+        
+        # Positional encodings for each scale
+        self.positional_encodings = []
+        time_dim = max_time
+        for _ in range(num_scales):
+            self.positional_encodings.append(
+                nn.Parameter(torch.randn(1, time_dim, d_model))
+            )
+            time_dim = time_dim // 2  # Halve time dimension for next scale
+        
+        # Transformer encoder layer
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=d_model,
+            nhead=downtr_nhead,
+            dim_feedforward=d_model * 2,
+            dropout=0.1,
+            batch_first=True
+        )
+        
+        # Transformer encoder for each scale
+        self.transformers = nn.ModuleList([
+            nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
             for _ in range(num_scales)
+        ])
+        self.downsamplers = nn.ModuleList()
+        for i in range(1, num_scales):  # finest scale does not downsample           
+            downsampler_block = nn.Sequential(
+                nn.Conv1d(
+                    in_channels=d_model,
+                    out_channels=d_model,
+                    kernel_size=3,
+                    stride=1,
+                    padding=1
+                ),
+                nn.MaxPool1d(kernel_size=2, stride=2),
+                nn.GELU()
+            )
+            self.downsamplers.append(downsampler_block)
+
+        self.downsamplers_from_raw = nn.ModuleList()
+        for i in range(1, num_scales):  # finest scale does not downsample           
+            downsampler_block = nn.Sequential(
+                nn.Conv1d(
+                    in_channels=d_model,
+                    out_channels=d_model,
+                    kernel_size=3,
+                    stride=1,
+                    padding=1
+                ),
+                nn.MaxPool1d(kernel_size=2, stride=2*i),
+                nn.GELU()
+            )
+            self.downsamplers_from_raw.append(downsampler_block)
+        
+        # Transposed convolution for upsampling coarser scales
+        self.upsamplers = nn.ModuleList()
+        for i in range(num_scales - 1):  # No upsampling for finest scale
+            self.upsamplers.append(
+                nn.ConvTranspose1d(
+                    in_channels=d_model,
+                    out_channels=d_model,
+                    kernel_size=4,  # Common choice for upsampling
+                    stride=2,
+                    padding=1,
+                    output_padding=0  # Adjust if needed for exact time dimension
+                )
+            )
+        self.CAs = nn.ModuleList([
+            CrossAttentionWithResidual(d_model, uptr_nhead)
+            for _ in range(num_scales - 1)
         ])
 
     def forward(self, features):
         # Input features: [batch, channels, time]
         scales = [features]
         # Generate coarser scales with temporal pooling
+        time_dim = self.max_time
         for i in range(1, self.num_scales):
-            pooled = F.avg_pool1d(scales[-1], kernel_size=2, stride=2)
+            # pooled = F.avg_pool1d(scales[-1], kernel_size=2, stride=2)
+            # pooled = self.downsamplers[i-1](scales[-1])
+            
+            time_dim = time_dim // 2
+            # pooled = F.avg_pool1d(scales[0], kernel_size=2, stride=2*i)
+            pooled = self.downsamplers_from_raw[i-1](scales[0])
+            pooled= pooled[:, :, :time_dim]
             scales.append(pooled)
 
-        # Process each scale with a 1D convolution
+        # Process each scale
         processed_scales = []
         for i, scale in enumerate(scales):
-            processed = self.scale_convs[i](scale)
-            processed_scales.append(processed)
+            # Reshape: [batch, channels, time] -> [batch, time, channels]
+            batch, channels, time = scale.shape
+            scale = scale.permute(0, 2, 1)  # [batch, time, d_model]
+            
+            # Add positional encoding
+            pos_encoding = self.positional_encodings[i][:, :time, :].to(scale.device)
+            transformer_input = scale + pos_encoding
+            
+            # Apply transformer
+            transformer_out = self.transformers[i](transformer_input)  # [batch, time, d_model]
+            
+            # Reshape back to [batch, d_model, time]
+            transformer_out = transformer_out.permute(0, 2, 1)
+            
+            processed_scales.append(transformer_out)
+            
+        for i in range(2, 0, -1):
+            # Compute target time dimension (original time)
+            target_time = processed_scales[i-1].shape[2]
+            scale = processed_scales[i]
+            
+            # Apply transposed convolution
+            upsampled = self.upsamplers[i-1](scale)  # [batch, d_model, ~time]
+            
+            # Trim or pad to match exact time dimension
+            current_time = upsampled.shape[-1]
+            if current_time > target_time:
+                upsampled = upsampled[:, :, :target_time]
+            elif current_time < target_time:
+                upsampled = F.pad(upsampled, (0, target_time - current_time))
+                
+            improved = self.CAs[i-1](target = processed_scales[i-1].permute(0,2,1).contiguous(),
+                               source = upsampled.permute(0,2,1).contiguous())
+            
+            # improved = self.CA(target = upsampled.permute(0,2,1).contiguous(),
+            #                    source = processed_scales[i-1].permute(0,2,1).contiguous())
+            processed_scales[i-1] = improved.permute(0,2,1).contiguous()
 
-        # Combine: upsample coarser scales and add to the finest scale
-        combined = processed_scales[0]
-        for i in range(1, self.num_scales):
-            # Upsample to match the finest scale's temporal length
-            upsampled = F.interpolate(
-                processed_scales[i],
-                size=features.size(2),
-                mode='linear',
-                align_corners=False
-            )
-            combined = combined + upsampled
-
-        return combined
+        return processed_scales[0]
 
 class Model(BaseRGBModel):
 
@@ -100,26 +198,14 @@ class Model(BaseRGBModel):
             self._d = feat_dim # Set feature dimension
             self._features = features # Assign X3D trunk
 
-            # Freeze backbone layers if specified
-            # self._freeze_backbone(self._features, trainable_layers)
-            # --- MODIFICATION END ---
-
             # --- Temporal Transformer ---
             self.max_seq_len = args.clip_len
-            self.positional_encoding = nn.Parameter(torch.randn(1, self.max_seq_len, self._d)) # _d is now from X3D
 
-            num_heads = args.num_heads_transformer
-            num_layers = args.num_layers_transformer
-            print("Feature dimension (_d):", self._d)
-            encoder_layer = nn.TransformerEncoderLayer(
-                d_model=self._d,
-                nhead=num_heads,
-                dim_feedforward=self._d * 2,
-                dropout=0.1,
-                batch_first=True
-            )
-            self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
-
+            downtr_num_heads = args.num_heads_transformer
+            downtr_num_layers = args.num_layers_transformer
+            uptr_num_heads =  args.num_heads_crossattention
+            self.pyramid = TemporalFeaturePyramid(num_scales=3, d_model=self._d, uptr_nhead=uptr_num_heads, downtr_nhead=downtr_num_heads,
+                                                  num_layers=downtr_num_layers, max_time=self.max_seq_len)
 
             # --- MLP for classification ---
             self._fc = FCLayers(self._d, args.num_classes + 1)
@@ -153,18 +239,13 @@ class Model(BaseRGBModel):
             x3d_out = self._features(x_permuted)
             # 3. Spatial Average Pooling per frame: -> [B, _d, T, 1, 1]
             pooled = F.adaptive_avg_pool3d(x3d_out, (None, 1, 1))
-            # 4. Reshape for Transformer: -> [B, T, _d]
-            # Squeeze H', W' dims -> [B, _d, T]; Permute T and _d -> [B, T, _d]
-            im_feat = pooled.squeeze(-1).squeeze(-1).permute(0, 2, 1).contiguous()
-            
-            # Add positional encoding
-            pos_encoding = self.positional_encoding[:, :T, :]
-            im_feat = im_feat + pos_encoding  # (B, T, D)
+            # 4. Reshape
+            im_feat = pooled.squeeze(-1).squeeze(-1).contiguous()
 
-            # Temporal modeling
-            im_feat = self.transformer(im_feat)  # (B, T, D)
-
-            # Classification
+            # 5. Temporal modeling
+            im_feat = self.pyramid(im_feat)  # [(B, D, T), (B, D, T/2), (B, D, T/4), ...]
+            im_feat = im_feat.permute(0, 2, 1).contiguous()  # (B, T, D)
+            # 6. Classification
             im_feat = self._fc(im_feat)  # (B, T, num_classes+1)
 
             return im_feat
@@ -181,26 +262,6 @@ class Model(BaseRGBModel):
             for i in range(x.shape[0]):
                 x[i] = self.standarization(x[i])
             return x
-
-        # --- ADDED METHOD ---
-        def _freeze_backbone(self, backbone, trainable_blocks):
-            """Freezes backbone layers except the last `trainable_blocks`."""
-            # Internal helper method, added for X3D freezing functionality
-            if not hasattr(backbone, 'blocks'): return # Safety check
-            trunk_params = list(backbone.blocks.parameters())
-            for p in trunk_params: p.requires_grad = False # Freeze all first
-            if trainable_blocks > 0:
-                learnable_params = []
-                num_blocks_total = len(list(backbone.blocks))
-                if isinstance(backbone.blocks, (nn.Sequential, nn.ModuleList)):
-                    start_idx = max(0, num_blocks_total - trainable_blocks)
-                    for i in range(start_idx, num_blocks_total):
-                        learnable_params.extend(list(backbone.blocks[i].parameters()))
-                else: # Fallback if structure is different
-                    if trainable_blocks <= len(trunk_params): learnable_params = trunk_params[-trainable_blocks:]
-                    else: learnable_params = trunk_params # Train all if requested > available
-                for p in learnable_params: p.requires_grad = True
-        # --- END ADDED METHOD ---
 
         def print_stats(self): # Original method
             print('Model params:', 
