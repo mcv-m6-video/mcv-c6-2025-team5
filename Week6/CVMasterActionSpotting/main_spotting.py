@@ -63,6 +63,7 @@ def update_args(args, config):
     args.dim_mlp_transformer = config.get('dim_mlp_transformer', 2)
     args.wandb_project = config.get('wandb_project',"action-spotting")
     args.model_type = config.get('model_type', 'none')
+    args.num_scales = config.get('num_scales', 3)
     return args
 
 def get_lr_scheduler(args, optimizer, num_steps_per_epoch):

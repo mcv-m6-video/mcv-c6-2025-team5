@@ -28,12 +28,10 @@ class TemporalFeaturePyramid(nn.Module):
         
         # Positional encodings for each scale
         self.positional_encodings = []
-        time_dim = max_time
         for _ in range(num_scales):
             self.positional_encodings.append(
-                nn.Parameter(torch.randn(1, time_dim, d_model))
+                nn.Parameter(torch.randn(1, max_time, d_model))
             )
-            time_dim = time_dim // 2  # Halve time dimension for next scale
         
         # Transformer encoder layer
         encoder_layer = nn.TransformerEncoderLayer(
@@ -49,49 +47,50 @@ class TemporalFeaturePyramid(nn.Module):
             nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
             for _ in range(num_scales)
         ])
-        self.downsamplers = nn.ModuleList()
-        for i in range(1, num_scales):  # finest scale does not downsample           
-            downsampler_block = nn.Sequential(
-                nn.Conv1d(
-                    in_channels=d_model,
-                    out_channels=d_model,
-                    kernel_size=3,
-                    stride=1,
-                    padding=1
-                ),
-                nn.MaxPool1d(kernel_size=2, stride=2),
-                nn.GELU()
-            )
-            self.downsamplers.append(downsampler_block)
+        # self.downsamplers = nn.ModuleList()
+        # for i in range(1, num_scales):  # finest scale does not downsample           
+        #     downsampler_block = nn.Sequential(
+        #         nn.Conv1d(
+        #             in_channels=d_model,
+        #             out_channels=d_model,
+        #             kernel_size=3,
+        #             stride=1,
+        #             padding=1
+        #         ),
+        #         nn.MaxPool1d(kernel_size=2, stride=2),
+        #         nn.GELU()
+        #     )
+        #     self.downsamplers.append(downsampler_block)
 
-        self.downsamplers_from_raw = nn.ModuleList()
-        for i in range(1, num_scales):  # finest scale does not downsample           
-            downsampler_block = nn.Sequential(
-                nn.Conv1d(
-                    in_channels=d_model,
-                    out_channels=d_model,
-                    kernel_size=3,
-                    stride=1,
-                    padding=1
-                ),
-                nn.MaxPool1d(kernel_size=2, stride=2*i),
-                nn.GELU()
-            )
-            self.downsamplers_from_raw.append(downsampler_block)
+        # self.downsamplers_from_raw = nn.ModuleList()
+        # for i in range(1, num_scales):  # finest scale does not downsample           
+        #     downsampler_block = nn.Sequential(
+        #         nn.Conv1d(
+        #             in_channels=d_model,
+        #             out_channels=d_model,
+        #             kernel_size=3,
+        #             stride=1,
+        #             padding=1
+        #         ),
+        #         nn.MaxPool1d(kernel_size=2, stride=2*i),
+        #         nn.GELU()
+        #     )
+        #     self.downsamplers_from_raw.append(downsampler_block)
         
         # Transposed convolution for upsampling coarser scales
-        self.upsamplers = nn.ModuleList()
-        for i in range(num_scales - 1):  # No upsampling for finest scale
-            self.upsamplers.append(
-                nn.ConvTranspose1d(
-                    in_channels=d_model,
-                    out_channels=d_model,
-                    kernel_size=4,  # Common choice for upsampling
-                    stride=2,
-                    padding=1,
-                    output_padding=0  # Adjust if needed for exact time dimension
-                )
-            )
+        # This is for upsampling that doubles every stage
+        # self.upsamplers = nn.ModuleList()
+        # for i in range(num_scales - 1):  # No upsampling for finest scale
+        #     self.upsamplers.append(
+        #         nn.ConvTranspose1d(
+        #             in_channels=d_model,
+        #             out_channels=d_model,
+        #             kernel_size=4,  # Common choice for upsampling
+        #             stride=2,
+        #             padding=1,
+        #             output_padding=0  # Adjust if needed for exact time dimension
+        #         )
+        #     )
         self.CAs = nn.ModuleList([
             CrossAttentionWithResidual(d_model, uptr_nhead)
             for _ in range(num_scales - 1)
@@ -106,10 +105,10 @@ class TemporalFeaturePyramid(nn.Module):
             # pooled = F.avg_pool1d(scales[-1], kernel_size=2, stride=2)
             # pooled = self.downsamplers[i-1](scales[-1])
             
-            time_dim = time_dim // 2
+            pooled = F.avg_pool1d(scales[0], kernel_size=2, stride=1+i)
+
             # pooled = F.avg_pool1d(scales[0], kernel_size=2, stride=2*i)
-            pooled = self.downsamplers_from_raw[i-1](scales[0])
-            pooled= pooled[:, :, :time_dim]
+            # pooled = self.downsamplers_from_raw[i-1](scales[0])
             scales.append(pooled)
 
         # Process each scale
@@ -117,6 +116,7 @@ class TemporalFeaturePyramid(nn.Module):
         for i, scale in enumerate(scales):
             # Reshape: [batch, channels, time] -> [batch, time, channels]
             batch, channels, time = scale.shape
+            
             scale = scale.permute(0, 2, 1)  # [batch, time, d_model]
             
             # Add positional encoding
@@ -131,23 +131,25 @@ class TemporalFeaturePyramid(nn.Module):
             
             processed_scales.append(transformer_out)
             
-        for i in range(2, 0, -1):
+        for i in range(self.num_scales-1, 0, -1):
             # Compute target time dimension (original time)
             target_time = processed_scales[i-1].shape[2]
             scale = processed_scales[i]
             
             # Apply transposed convolution
-            upsampled = self.upsamplers[i-1](scale)  # [batch, d_model, ~time]
+            # upsampled = self.upsamplers[i-1](scale)  # [batch, d_model, ~time]
             
             # Trim or pad to match exact time dimension
-            current_time = upsampled.shape[-1]
-            if current_time > target_time:
-                upsampled = upsampled[:, :, :target_time]
-            elif current_time < target_time:
-                upsampled = F.pad(upsampled, (0, target_time - current_time))
+            # current_time = upsampled.shape[-1]
+            # if current_time > target_time:
+            #     upsampled = upsampled[:, :, :target_time]
+            # elif current_time < target_time:
+            #     upsampled = F.pad(upsampled, (0, target_time - current_time))
                 
+            # improved = self.CAs[i-1](target = processed_scales[i-1].permute(0,2,1).contiguous(),
+            #                    source = upsampled.permute(0,2,1).contiguous())
             improved = self.CAs[i-1](target = processed_scales[i-1].permute(0,2,1).contiguous(),
-                               source = upsampled.permute(0,2,1).contiguous())
+                               source = scale.permute(0,2,1).contiguous())
             
             # improved = self.CA(target = upsampled.permute(0,2,1).contiguous(),
             #                    source = processed_scales[i-1].permute(0,2,1).contiguous())
@@ -204,7 +206,7 @@ class Model(BaseRGBModel):
             downtr_num_heads = args.num_heads_transformer
             downtr_num_layers = args.num_layers_transformer
             uptr_num_heads =  args.num_heads_crossattention
-            self.pyramid = TemporalFeaturePyramid(num_scales=3, d_model=self._d, uptr_nhead=uptr_num_heads, downtr_nhead=downtr_num_heads,
+            self.pyramid = TemporalFeaturePyramid(num_scales=args.num_scales, d_model=self._d, uptr_nhead=uptr_num_heads, downtr_nhead=downtr_num_heads,
                                                   num_layers=downtr_num_layers, max_time=self.max_seq_len)
 
             # --- MLP for classification ---
