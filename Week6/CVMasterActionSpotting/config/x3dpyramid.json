@@ -23,5 +23,5 @@
     "num_heads_transformer": 12,
     "num_layers_transformer": 3,
     "num_heads_crossattention": 12,
-    "num_scales": 3
+    "num_scales": 5
 }
