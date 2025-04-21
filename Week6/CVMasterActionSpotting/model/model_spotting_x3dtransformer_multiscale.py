@@ -131,6 +131,7 @@ class TemporalFeaturePyramid(nn.Module):
             
             processed_scales.append(transformer_out)
             
+        improved_embs = [processed_scales[0]]    
         for i in range(self.num_scales-1, 0, -1):
             # Compute target time dimension (original time)
             target_time = processed_scales[i-1].shape[2]
@@ -148,14 +149,19 @@ class TemporalFeaturePyramid(nn.Module):
                 
             # improved = self.CAs[i-1](target = processed_scales[i-1].permute(0,2,1).contiguous(),
             #                    source = upsampled.permute(0,2,1).contiguous())
-            improved = self.CAs[i-1](target = processed_scales[i-1].permute(0,2,1).contiguous(),
-                               source = scale.permute(0,2,1).contiguous())
+            # improved = self.CAs[i-1](target = processed_scales[i-1].permute(0,2,1).contiguous(),
+            #                    source = scale.permute(0,2,1).contiguous())
             
             # improved = self.CA(target = upsampled.permute(0,2,1).contiguous(),
             #                    source = processed_scales[i-1].permute(0,2,1).contiguous())
-            processed_scales[i-1] = improved.permute(0,2,1).contiguous()
+            # processed_scales[i-1] = improved.permute(0,2,1).contiguous()
 
-        return processed_scales[0]
+            improved = self.CAs[i-1](target = processed_scales[0].permute(0,2,1).contiguous(),
+                               source = scale.permute(0,2,1).contiguous()) #convert to [B, T, D] for attention
+            improved_embs.append(improved.permute(0,2,1).contiguous()) #convert back to [B, D, T]
+            
+        # return processed_scales[0]
+        return torch.stack(improved_embs, dim=0).mean(dim=0)  # [batch, d_model, time]
 
 class Model(BaseRGBModel):
 
