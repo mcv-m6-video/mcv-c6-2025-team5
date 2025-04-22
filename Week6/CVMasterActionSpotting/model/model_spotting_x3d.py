@@ -109,6 +109,8 @@ class ModelX3D(BaseRGBModel):
             # Store the trunk (blocks) + custom head
             self._features = model
 
+            print(model)
+
             # 4) Freeze backbone if needed (except final head)
             self._freeze_backbone(self._features, self._trainable_layers)
 

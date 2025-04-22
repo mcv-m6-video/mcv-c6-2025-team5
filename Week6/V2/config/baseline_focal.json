@@ -1,0 +1,22 @@
+{
+    "frame_dir": "/ghome/c5mcv05/Eudald/CVMasterActionSpotting/_frames/426x240",
+    "save_dir": "/ghome/c5mcv05/Eudald/CVMasterActionSpotting/_output",
+    "labels_dir": "/ghome/c5mcv05/SoccerNet/allVideos/",
+    "store_mode": "load",
+    "task": "spotting",
+    "batch_size": 1,
+    "clip_len": 50,
+    "stride": 2,
+    "dataset": "soccernetball",
+    "epoch_num_frames": 500000,
+    "soft_action_dilation": 2.0,
+    "feature_arch": "rny002",
+    "loss": "ce",
+    "learning_rate": 0.0008,
+    "num_classes": 12,
+    "num_epochs": 1,
+    "warm_up_epochs": 0,
+    "only_test": false,
+    "device": "cuda",
+    "num_workers": 4
+}

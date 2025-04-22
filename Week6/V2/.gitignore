@@ -1,0 +1,10 @@
+.idea/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+frames/
+_frames/
+_output/
+_logs/
